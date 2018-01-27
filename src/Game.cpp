@@ -6,6 +6,7 @@
 Game::Game()
 :   m_window    ({1500, 900}, "Bunner")
 {
+	//m_window.setView(view);
     m_window.setFramerateLimit(100);
 
 	pushState<StateMenu>(*this); //game menu. Other states get pushed/popped from this point
@@ -47,7 +48,7 @@ void Game::run()
         }
 
         //Render
-        m_window.clear(sf::Color(70,85,57));
+        m_window.clear(sf::Color(57, 68, 75));
         state.render(m_window);
         counter.draw(m_window);
         m_window.display();

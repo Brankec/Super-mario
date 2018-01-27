@@ -35,7 +35,7 @@ void Map::loadMap(Level& levelsPass)
 
 void Map::setOriginCenter()
 {
-	tile[0].setOrigin(sf::Vector2f(tile[0].getSize().x / 2, tile[0].getSize().y / 2));
+	tile[2].setOrigin(sf::Vector2f(tile[0].getSize().x / 2, tile[0].getSize().y / 2));
 }
 
 void Map::loadTilesForeground()
@@ -87,7 +87,7 @@ void Map::drawForeGround(sf::RenderTarget& renderer)
 				if (mapForeGround[y][x].x != -1 && mapForeGround[y][x].y != -1)
 				{
 					tile[3].setPosition(x * (float)powOfN, y * (float)powOfN);
-					tile[3].setTextureRect(sf::IntRect(mapForeGround[y][x].x + 1, mapForeGround[y][x].y + 1, tileSize.x - 2, tileSize.y - 2));
+					tile[3].setTextureRect(sf::IntRect(mapForeGround[y][x].x, mapForeGround[y][x].y, tileSize.x, tileSize.y));
 
 					renderer.draw(tile[3]);
 				}
@@ -105,12 +105,9 @@ void Map::loadTilesMain()
 		openfileMain >> tileLocation;
 
 		if (tileTexture.loadFromFile(tileLocation))
-			tile[2].setTexture(&tileTexture);
 
-		tile[2].setSize(sf::Vector2f((float)powOfN, (float)powOfN));
 		while (openfileMain.good())
 		{
-
 			openfileMain >> tileIndex;
 			if (tileIndex != ',')
 			{
@@ -124,34 +121,45 @@ void Map::loadTilesMain()
 			}
 		}
 	}
+	if (mapMain.size() != 0)
+	{
+		for (int x = 0; x < mapMain[1].size(); x++)
+		{
+			for (int y = 0; y < mapMain.size(); y++)
+			{
+				if (mapMain[y][x].x != -1 && mapMain[y][x].y != -1)
+				{
+					bTiles.emplace_back(x * (float)powOfN, y * (float)powOfN, tileTexture, mapMain[y][x]);
+				}
+			}
+		}
+	}
 }
 void Map::drawMain(sf::RenderTarget & renderer, Player & player)
 {
+
 	if (mapMain.size() != 0)
 	{
 		float cam_x = Camera::getView().getCenter().x;
 		int cam_x_tile = cam_x / tile[2].getSize().x;
-		int Tile_row_width = (renderer.getView().getSize().x + 2000) / mapMain[1].size();
+		int Tile_row_width = (renderer.getView().getSize().x + 2000) / 100;
 		float cam_y = Camera::getView().getCenter().y;
 		int cam_y_tile = cam_y / tile[2].getSize().y;
-		int Tile_column_height = (renderer.getView().getSize().y) + 100 / mapMain.size();
+		int Tile_column_height = (renderer.getView().getSize().y) + 100 / 25;
 
 		int X_border_right = std::min((int)mapMain[1].size(), cam_x_tile + Tile_row_width / 2);
 		int Y_border_right = std::min((int)mapMain.size(), cam_y_tile + Tile_column_height / 2);
 
-		for (int x = std::max(cam_x_tile - Tile_row_width / 2, 0); x < X_border_right; x++)
-			for (int y = std::max(cam_y_tile - Tile_column_height / 2, 0); y < Y_border_right; y++)
+		//for (int x = std::max(cam_x_tile - Tile_row_width / 2, 0); x < X_border_right; x++)
+		{
+			//for (int y = std::max(cam_y_tile - Tile_column_height / 2, 0); y < Y_border_right; y++)
 			{
-				if (mapMain[y][x].x != -1 && mapMain[y][x].y != -1)
+				for (auto& bTile : bTiles)
 				{
-					tile[2].setPosition(x * (float)powOfN, y * (float)powOfN);
-					tile[2].setTextureRect(sf::IntRect(mapMain[y][x].x + 1, mapMain[y][x].y + 1, tileSize.x - 2, tileSize.y - 2));
-
-					Collision(player);
-
-					renderer.draw(tile[2]);
+					renderer.draw(bTile.getTile());
 				}
 			}
+		}
 	}
 }
 
@@ -203,7 +211,7 @@ void Map::drawBackGround(sf::RenderTarget & renderer)
 				if (mapBackGround[y][x].x != -1 && mapBackGround[y][x].y != -1)
 				{					
 					tile[0].setPosition(x * (float)powOfN, y * (float)powOfN);
-					tile[0].setTextureRect(sf::IntRect(mapBackGround[y][x].x + 1, mapBackGround[y][x].y + 1, tileSize.x - 2, tileSize.y - 2));
+					tile[0].setTextureRect(sf::IntRect(mapBackGround[y][x].x + 1, mapBackGround[y][x].y + 1, tileSize.x - 1, tileSize.y - 1));
 
 					renderer.draw(tile[0]);
 				}
@@ -212,15 +220,15 @@ void Map::drawBackGround(sf::RenderTarget & renderer)
 }
 
 
-sf::Vector2i Map::Sprite_sheet_coordinates(int tileIndex)
+sf::Vector2f Map::Sprite_sheet_coordinates(int tileIndex)
 {
 	if (tileIndex == -1)
-		return sf::Vector2i(-1, -1);//for empty cells in game
+		return sf::Vector2f(-1, -1);//for empty cells in game
 	else
 	{
-		sf::Vector2i coords;
-		coords.x = (tileIndex % amountOfTiles) * tileSize.x;   //amount of tiles ONLY in 1 row (on the X axis)
-		coords.y = (tileIndex / amountOfTiles) * tileSize.y;  //leave it like this for now
+		sf::Vector2f coords;
+		coords.x = std::round((tileIndex % amountOfTiles) * tileSize.x);   //amount of tiles ONLY in 1 row (on the X axis)
+		coords.y = std::round((tileIndex / amountOfTiles) * tileSize.y);  //leave it like this for now
 
 
 		return coords;

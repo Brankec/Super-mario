@@ -59,7 +59,6 @@ void StatePlaying::update(sf::Time deltaTime)
 			player.entityRec.setPosition(levels.spawnPoint);
 			player.isFinished = false;
 		}
-
 		player.playerUpdate(deltaTime.asSeconds());
 		Camera::followPlayerSmooth(player.getPos(), deltaTime.asSeconds());
 	}
@@ -77,14 +76,16 @@ void StatePlaying::fixedUpdate(sf::Time deltaTime)
 void StatePlaying::render(sf::RenderTarget& renderer)
 {
 		renderer.setView(Camera::getView({ 10.f, 1.f })); //background scroll
-		map.drawBackGround(renderer); //Background
+		//map.drawBackGround(renderer); //Background
 		map.drawMain(renderer, player); //Main (player base)
 		renderer.draw(player.entityRec); //player
-		map.drawForeGround(renderer); //Foreground
+		//map.drawForeGround(renderer); //Foreground
 		renderer.setView(renderer.getDefaultView()); //resets the view to default state
 
 		if (openMenu)
 			renderMenu(renderer);
+
+		//std::cout << player.velocity.y << std::endl;
 }
 
 void StatePlaying::pushState(bool*m_shouldPush)

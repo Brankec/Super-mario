@@ -28,7 +28,7 @@ void Player::loadPlayerAnimation()
 
 	//moving stage
 	playerFrame[0][1] = { 19, 0, 16, 16 };
-	playerFrame[1][1] = { 38, 0, 13, 16 };
+	playerFrame[1][1] = { 38, 0, 14, 16 };
 	playerFrame[2][1] = { 52, 0, 16, 16 };
 }
 
@@ -51,7 +51,7 @@ void Player::setPos()
 {
 
 	if (velocity.y < 20)
-		velocity.y += gravity;
+		//velocity.y += gravity;
 
 	entityRec.move(velocity.x, velocity.y);
 }
@@ -175,7 +175,7 @@ void Player::playerAnimation()
 
 	else if (abs(velocity.y) > 0.81)
 	{
-		entityRec.setTextureRect(playerFrame[2][0]); // fall
+		entityRec.setTextureRect(playerFrame[0][0]); // fall
 	}
 	
 }

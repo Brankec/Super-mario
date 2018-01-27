@@ -8,6 +8,7 @@
 #include "../Entities/Player.h"
 #include "../Util/Camera.h"
 #include "../World/Level.h"
+#include "Tiles/BasicTiles.h"
 
 #pragma once
 
@@ -30,7 +31,7 @@ public:
 
 
 	void setOriginCenter();
-	sf::Vector2i Sprite_sheet_coordinates(int tileIndex);
+	sf::Vector2f Sprite_sheet_coordinates(int tileIndex);
 
 
 public:
@@ -40,11 +41,11 @@ public:
 	int objectiveTileCoords = 0;
 	sf::Texture tileTexture;
 	sf::RectangleShape tile[5];  // 0) background, 1) background-main(only top has collision), 2) main(playerbase), 3) foreground 4) interactables
-
-	std::vector<std::vector<sf::Vector2i>> mapForeGround, mapBackGround, mapMain, mapBackGroundMain, mapInteractables;
-	std::vector<sf::Vector2i> tempMap;
-	sf::Vector2i loadCounter;
 	sf::Vector2i tileSize;
+
+	std::vector<std::vector<sf::Vector2f>> mapForeGround, mapBackGround, mapMain;
+	std::vector<sf::Vector2f> tempMap;
+	sf::Vector2i loadCounter;
 	int amountOfTiles;
 	void Collision(Player &player);
 
@@ -54,5 +55,10 @@ public:
 	std::ifstream openfileMain;
 	std::ifstream openfileBackgroundMain;
 	std::ifstream openfileBackground;
+
+
+
+
+	std::vector<BasicTiles> bTiles;
 };
 
