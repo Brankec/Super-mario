@@ -8,11 +8,14 @@
 #include "../../Entities/Player.h"
 #include "../../Util/Camera.h"
 #include "../../World/Level.h"
+#include "TileCollision.h"
 #include "Tile.h"
 
 #pragma once
 
-class BasicTiles : public Tile
+class BasicTiles 
+	: public Tile
+	, public TileCollision
 {
 public:
 	BasicTiles(int TilePositionX, int TilePositionY, sf::Texture& tileTexture, sf::Vector2f tileIndex);
@@ -20,6 +23,12 @@ public:
 	void setTileTexture(sf::Vector2f tileIndex);
 	
 	void setTilePosition(sf::Vector2f tPosition);
+
+	void ToggleCollision(bool set);
+
+	void Collision(Player &entity);
+
+	void drawTile(sf::RenderTarget& renderer);
 
 	sf::RectangleShape getTile();
 };

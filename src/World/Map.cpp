@@ -129,36 +129,34 @@ void Map::loadTilesMain()
 			{
 				if (mapMain[y][x].x != -1 && mapMain[y][x].y != -1)
 				{
-					bTiles.emplace_back(x * (float)powOfN, y * (float)powOfN, tileTexture, mapMain[y][x]);
+					MTiles.emplace_back(x * (float)powOfN, y * (float)powOfN, tileTexture, mapMain[y][x]);
 				}
 			}
 		}
 	}
-}
-void Map::drawMain(sf::RenderTarget & renderer, Player & player)
-{
 
+	for (auto& mTile : MTiles) //setup
+	{
+		mTile.ToggleCollision(true);
+	}
+}
+void Map::drawMain(sf::RenderTarget & renderer)
+{
 	if (mapMain.size() != 0)
 	{
-		float cam_x = Camera::getView().getCenter().x;
-		int cam_x_tile = cam_x / tile[2].getSize().x;
-		int Tile_row_width = (renderer.getView().getSize().x + 2000) / 100;
-		float cam_y = Camera::getView().getCenter().y;
-		int cam_y_tile = cam_y / tile[2].getSize().y;
-		int Tile_column_height = (renderer.getView().getSize().y) + 100 / 25;
-
-		int X_border_right = std::min((int)mapMain[1].size(), cam_x_tile + Tile_row_width / 2);
-		int Y_border_right = std::min((int)mapMain.size(), cam_y_tile + Tile_column_height / 2);
-
-		//for (int x = std::max(cam_x_tile - Tile_row_width / 2, 0); x < X_border_right; x++)
+		for (auto& mTile : MTiles)
 		{
-			//for (int y = std::max(cam_y_tile - Tile_column_height / 2, 0); y < Y_border_right; y++)
-			{
-				for (auto& bTile : bTiles)
-				{
-					renderer.draw(bTile.getTile());
-				}
-			}
+			renderer.draw(mTile.getTile());
+		}
+	}
+}
+void Map::CollisionMain(Player & player)
+{
+	if (mapMain.size() != 0)
+	{
+		for (auto& mTile : MTiles)
+		{
+			mTile.Collision(player);
 		}
 	}
 }
@@ -173,9 +171,7 @@ void Map::loadTilesBackground()
 		openfileBackground >> tileLocation;
 
 		if (tileTexture.loadFromFile(tileLocation))
-			tile[0].setTexture(&tileTexture);
 
-		tile[0].setSize(sf::Vector2f((float)powOfN, (float)powOfN));
 		while (openfileBackground.good())
 		{
 			openfileBackground >> tileIndex;
@@ -190,32 +186,29 @@ void Map::loadTilesBackground()
 
 		}
 	}
+
+	if (mapBackGround.size() != 0)
+	{
+		for (int x = 0; x < mapBackGround[1].size(); x++)
+		{
+			for (int y = 0; y < mapBackGround.size(); y++)
+			{
+				if (mapBackGround[y][x].x != -1 && mapBackGround[y][x].y != -1)
+				{
+					BTiles.emplace_back(x * (float)powOfN, y * (float)powOfN, tileTexture, mapBackGround[y][x]);
+				}
+			}
+		}
+	}
 }
 void Map::drawBackGround(sf::RenderTarget & renderer)
 {
 	if (mapBackGround.size() != 0)
 	{
-		float cam_x = Camera::getView().getCenter().x;
-		int cam_x_tile = cam_x / tile[0].getSize().x;
-		int Tile_row_width = (renderer.getView().getSize().x + 2000) / mapBackGround[1].size();
-		float cam_y = Camera::getView().getCenter().y;
-		int cam_y_tile = cam_y / tile[0].getSize().y;
-		int Tile_column_height = (renderer.getView().getSize().y) / mapBackGround.size();
-
-		int X_border_right = std::min((int)mapBackGround[1].size(), cam_x_tile + Tile_row_width / 2);
-		int Y_border_right = std::min((int)mapBackGround.size(), cam_y_tile + Tile_column_height / 2);
-
-		for (int x = std::max(cam_x_tile - Tile_row_width / 2, 0); x < X_border_right; x++)
-			for (int y = std::max(cam_y_tile - Tile_column_height / 2, 0); y < Y_border_right; y++)
-			{
-				if (mapBackGround[y][x].x != -1 && mapBackGround[y][x].y != -1)
-				{					
-					tile[0].setPosition(x * (float)powOfN, y * (float)powOfN);
-					tile[0].setTextureRect(sf::IntRect(mapBackGround[y][x].x + 1, mapBackGround[y][x].y + 1, tileSize.x - 1, tileSize.y - 1));
-
-					renderer.draw(tile[0]);
-				}
-			}
+		for (auto& bTile : BTiles)
+		{
+			bTile.drawTile(renderer);
+		}
 	}
 }
 
@@ -232,58 +225,5 @@ sf::Vector2f Map::Sprite_sheet_coordinates(int tileIndex)
 
 
 		return coords;
-	}
-}
-
-
-void Map::Collision(Player &player)
-{
-	float PlayerLeft = player.entityRec.getPosition().x - player.getAABB().width / 2;
-	float PlayerRight = player.entityRec.getPosition().x + player.getAABB().width / 2;
-	float PlayerTop = player.entityRec.getPosition().y - player.getAABB().height / 2;
-	float PlayerBottom = player.entityRec.getPosition().y + player.getAABB().height / 2;
-
-	float BlockLeft = tile[2].getPosition().x;
-	float BlockRight = tile[2].getPosition().x + tile[2].getSize().x;
-	float BlockTop = tile[2].getPosition().y;
-	float BlockBottom = tile[2].getPosition().y + tile[2].getSize().y;
-
-	if (PlayerRight > BlockLeft - 10 && 
-		PlayerLeft < BlockRight + 10 && 
-		PlayerBottom > BlockTop + 5 && 
-		PlayerTop < BlockBottom - 5)
-	{
-		if (PlayerRight >= BlockLeft && PlayerLeft <= BlockLeft)  //Left side of the Block
-		{
-			player.entityRec.move(-0.5, 0);
-			player.velocity.x = 0;
-		}
-
-		if (PlayerLeft <= BlockRight && PlayerRight >= BlockRight)   //Right side of the block
-		{
-			player.entityRec.move(-player.velocity.x, 0);
-			player.entityRec.move(0.5, 0);
-			player.velocity.x = 0;
-		}
-
-	}
-	if (PlayerRight > BlockLeft + 5 && 
-		PlayerLeft < BlockRight - 5 && 
-		PlayerBottom > BlockTop - 10 && 
-		PlayerTop < BlockBottom + 10)
-	{
-		if (PlayerTop < BlockBottom && PlayerBottom > BlockBottom)    //Bottom side of the block
-		{
-			player.entityRec.move(0, -player.velocity.y);
-			player.velocity.y = 0;
-		}
-
-		if (PlayerBottom > BlockTop && PlayerTop < BlockTop)    //Top side of the block
-		{
-			player.isJumping = false;
-			player.isOnGround = true;
-			player.entityRec.move(0, -player.velocity.y);
-			player.velocity.y = 0;
-		}
 	}
 }

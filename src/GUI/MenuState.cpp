@@ -3,10 +3,10 @@
 
 
 MenuState::MenuState()
-	: ExitWindowButton({ 750,600 }, "ExitButton")
-	, PushPlayButton({ 750,300 }, "PlayButton")
+	: ExitWindowButton({ 200 * 3, 240 * 3 }, "ExitButton")
+	, PushPlayButton({ 200 * 3, 80 * 3 }, "PlayButton")
 {
-	MenuBackground.setSize({ 1500, 1000 });
+	MenuBackground.setSize({ 400 * 3, 300 * 3 });
 	MenuBackground.setFillColor(sf::Color::Black);
 }
 

@@ -3,8 +3,8 @@
 
 
 inGameMenu::inGameMenu()
-	: ExitButton({ 750,600 }, "ExitButton")
-	, RestartButton({ 750,400 }, "RestartButton")
+	: ExitButton({ 200 * 3, 240 * 3 }, "ExitButton")
+	, RestartButton({ 200 * 3, 80 * 3 }, "RestartButton")
 {
 	MenuBackground.setSize({ 1500,900 });
 	MenuBackground.setOrigin(MenuBackground.getSize().x / 2, MenuBackground.getSize().y / 2);
@@ -47,7 +47,7 @@ void inGameMenu::RestartGame(Player& player)
 
 void inGameMenu::renderMenu(sf::RenderTarget& renderer)
 {
-	renderer.draw(MenuBackground);
+	//renderer.draw(MenuBackground);
 	renderer.draw(ExitButton.buttonRec);
 	renderer.draw(RestartButton.buttonRec);
 }

@@ -17,4 +17,7 @@ namespace Camera
 	static sf::View view;
 	static sf::Vector2f camera;
 	static sf::Vector2f cameraSpeed = { 1, 1 };
+
+	static float currentPositionX;
+	static float laterPositionX;
 };

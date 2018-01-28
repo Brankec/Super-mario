@@ -1,13 +1,14 @@
-
 #include <iostream>
-
+#include "../../Entities/Player.h"
 
 #pragma once
 
-class Map
+class TileCollision
 {
 public:
-	Map();
+	TileCollision();
 
+protected:
+	void Collide(sf::RectangleShape& tile, Player &entity);
 };
 

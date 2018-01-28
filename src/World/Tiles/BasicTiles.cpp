@@ -3,7 +3,7 @@
 
 BasicTiles::BasicTiles(int TilePositionX, int TilePositionY, sf::Texture& tileTexture, sf::Vector2f tileIndex)
 {
-	tileRec.setSize({ 16,16 });
+	tileRec.setSize({ 64,64 });
 	tileRec.setPosition(TilePositionX, TilePositionY);
 
 	tileTextureSize.x = 16;
@@ -23,7 +23,28 @@ void BasicTiles::setTilePosition(sf::Vector2f tPosition)
 	tileRec.setPosition(tPosition);
 }
 
+void BasicTiles::ToggleCollision(bool set)
+{
+	doesCollide = set;
+}
+
+void BasicTiles::Collision(Player & entity)
+{
+	if (doesCollide)
+	{
+		Collide(tileRec, entity);
+	}
+}
+
+void BasicTiles::drawTile(sf::RenderTarget & renderer)
+{
+	if(tileRec.getPosition().x < 2000)
+	renderer.draw(tileRec);
+}
+
 sf::RectangleShape BasicTiles::getTile()
 {
 	return tileRec;
 }
+
+

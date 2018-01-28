@@ -4,7 +4,7 @@
 #include "States/StateMenu.h"
 
 Game::Game()
-:   m_window    ({1500, 900}, "Bunner")
+:   m_window    ({400*3, 300*3}, "Bunner") //for 4:3 ratio
 {
 	//m_window.setView(view);
     m_window.setFramerateLimit(100);

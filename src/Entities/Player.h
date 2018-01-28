@@ -18,7 +18,7 @@ public:
 	void playerAnimation();
 
 	bool isJumping = false;
-	bool isOnGround = true;
+	bool isOnGround = false;
 	bool isFinished = false;
 
 private:

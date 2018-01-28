@@ -5,17 +5,17 @@
 Player::Player()
 	: walkingSound("footstep")
 {
-	entityRec.setSize({ 25,25 });
-	entityRec.setPosition(900, 150);
+	entityRec.setSize({ 64,64 });
+	entityRec.setPosition(30, 1314);
 	entityRec.setOrigin(entityRec.getSize().x / 2, entityRec.getSize().y / 2);
 	loadTextureToRec();
 	loadPlayerAnimation();
 	entityRec.setTextureRect(sf::IntRect(0, 0, 7, 11));
 
-	speedMAX = 3;
+	speedMAX = 4;
 	stamina = 100;
 
-	//gravity = 0.4;
+	gravity = 0.4;
 }
 
 void Player::loadPlayerAnimation()
@@ -28,31 +28,27 @@ void Player::loadPlayerAnimation()
 
 	//moving stage
 	playerFrame[0][1] = { 19, 0, 16, 16 };
-	playerFrame[1][1] = { 38, 0, 14, 16 };
+	playerFrame[1][1] = { 38, 0, 13, 16 };
 	playerFrame[2][1] = { 52, 0, 16, 16 };
 }
 
 void Player::playerUpdate(float deltaTime)
 {
-	setPos();
-
-	if ((int)velocity.y != 0)
+	if (std::round(velocity.y) != 0)
 	{
 		isOnGround = false;
 	}
 
-	walkingSound.update(deltaTime);
+	if (velocity.y < 20 && isOnGround == false)
+		velocity.y += gravity;
 
+	//setPos();
 	playerAnimation();
 	frameDelay += deltaTime;
 }
 
 void Player::setPos()
 {
-
-	if (velocity.y < 20)
-		//velocity.y += gravity;
-
 	entityRec.move(velocity.x, velocity.y);
 }
 
@@ -73,15 +69,9 @@ void Player::playerControl()
 
 		if (frameStage.x < 3)
 		{
-			if (frameDelay > 0.25f / abs(velocity.x))
+			if (frameDelay > 0.5f / abs(velocity.x))
 			{
 				frameDelay = 0;
-
-				if (isOnGround &&
-					(frameStage.x == 0 ||
-						frameStage.x == 5))
-					walkingSound.playSound(20);
-
 				frameStage.x++;
 			}
 		}
@@ -97,15 +87,9 @@ void Player::playerControl()
 
 		if (frameStage.x < 3)
 		{
-			if (frameDelay > 0.25f / abs(velocity.x))
+			if (frameDelay > 0.5f / abs(velocity.x))
 			{
 				frameDelay = 0;
-
-				if (isOnGround &&
-					(frameStage.x == 0 ||
-						frameStage.x == 5))
-					walkingSound.playSound(20);
-
 				frameStage.x++;
 			}
 		}
@@ -125,34 +109,20 @@ void Player::playerControl()
 	}
 
 	//Y axis
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && isJumping == false)
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && isOnGround)
 	{
-		isJumping = true;
-		velocity.y = -16;
+		velocity.y = -15;
 	}
 
 	//Sprint
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && isStaminaFull)   //not sure if this will be in the game
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))   //not sure if this will be in the game
 	{
-		if (stamina < 1)
-			isStaminaFull = false;
-
-		stamina -= 1;
-		speedMAX = 6;
+		speedMAX = 15;
 	}
 	else
 	{
-		if (stamina >= 100)
-			isStaminaFull = true;
-
-		stamina += 0.3;
-		speedMAX = 3;
+		speedMAX = 4;
 	}
-
-	//fire
-	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
-	{
-	}*/
 }
 
 void Player::playerAnimation()
@@ -168,14 +138,9 @@ void Player::playerAnimation()
 	}
 
 	
-	if (velocity.y < 0)
+	if (std::round(velocity.y) != 0)
 	{
 		entityRec.setTextureRect(playerFrame[1][0]); // jump
-	}
-
-	else if (abs(velocity.y) > 0.81)
-	{
-		entityRec.setTextureRect(playerFrame[0][0]); // fall
 	}
 	
 }

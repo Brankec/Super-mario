@@ -24,7 +24,8 @@ public:
 	void drawForeGround(sf::RenderTarget& renderer);
 
 	void loadTilesMain();//main player layer with all 4 collisions
-	void drawMain(sf::RenderTarget& renderer, Player& player);
+	void drawMain(sf::RenderTarget& renderer);
+	void CollisionMain(Player & player);
 
 	void loadTilesBackground();//for decorations
 	void drawBackGround(sf::RenderTarget& renderer);
@@ -47,18 +48,16 @@ public:
 	std::vector<sf::Vector2f> tempMap;
 	sf::Vector2i loadCounter;
 	int amountOfTiles;
-	void Collision(Player &player);
 
 	//open the file containing the tile name and tile positions
 	std::ifstream openfileForeground;
-	std::ifstream openfileInteractables;
 	std::ifstream openfileMain;
-	std::ifstream openfileBackgroundMain;
 	std::ifstream openfileBackground;
 
 
 
 
-	std::vector<BasicTiles> bTiles;
+	std::vector<BasicTiles> MTiles; //main layer
+	std::vector<BasicTiles> BTiles; //background layer
 };
 

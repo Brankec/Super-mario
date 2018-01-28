@@ -15,7 +15,7 @@ public:
 		Main = "Level 1/Level1_main";
 		ForeGround = "Level 1/Level1_foreground";
 
-		gridSize = 4;//size of each tile(not the texture)
+		gridSize = 6;//size of each tile(not the texture)
 		amountOfTilesX = 33;
 		tileSize = { 16, 16 };
 		objectiveTileCoords = 736;
