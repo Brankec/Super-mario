@@ -35,10 +35,10 @@ void Camera::followPlayerSmooth(sf::Vector2f entityPos, float deltaTime)
 		laterPositionX = currentPositionX;
 
 	//camera.x = Lerp(camera.x, laterPositionX, deltaTime * 3); //Uncomment one of these to activate the super mario camera view
-	//camera.x = laterPositionX;
-	camera.x = entityPos.x;
+	camera.x = laterPositionX;
+	//camera.x = entityPos.x;
 	//camera.y = Lerp(camera.y, entityPos.y - 100, deltaTime * 2);
-	camera.y = 1000;
+	camera.y = 450;
 
 	view.setCenter(camera);
 }

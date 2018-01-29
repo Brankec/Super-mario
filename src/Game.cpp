@@ -4,7 +4,7 @@
 #include "States/StateMenu.h"
 
 Game::Game()
-:   m_window    ({400*3, 300*3}, "Bunner") //for 4:3 ratio
+:   m_window    ({400*3, 300*3}, "Super Mario Bros") //for 4:3 ratio
 {
 	//m_window.setView(view);
     m_window.setFramerateLimit(100);
@@ -48,7 +48,7 @@ void Game::run()
         }
 
         //Render
-        m_window.clear(sf::Color(57, 68, 75));
+        m_window.clear(sf::Color(93, 148, 251));
         state.render(m_window);
         counter.draw(m_window);
         m_window.display();

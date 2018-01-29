@@ -32,13 +32,13 @@ void BasicTiles::Collision(Player & entity)
 {
 	if (doesCollide)
 	{
+		CheckForGround(tileRec, entity);
 		Collide(tileRec, entity);
 	}
 }
 
 void BasicTiles::drawTile(sf::RenderTarget & renderer)
 {
-	if(tileRec.getPosition().x < 2000)
 	renderer.draw(tileRec);
 }
 

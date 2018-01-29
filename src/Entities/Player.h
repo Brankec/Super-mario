@@ -1,8 +1,9 @@
 #include <SFML\Graphics.hpp>
 #include "Entity.h"
-#include "EntitySounds/Walking.h"
+#include "EntitySounds/Jump.h"
 #include <iostream>
 #include <algorithm>
+#include "../Util/Camera.h"
 
 #pragma once
 class Player : public Entity
@@ -18,7 +19,7 @@ public:
 	void playerAnimation();
 
 	bool isJumping = false;
-	bool isOnGround = false;
+	bool isOnGround;
 	bool isFinished = false;
 
 private:
@@ -26,7 +27,7 @@ private:
 	sf::IntRect playerFrame[12][2];
 	sf::Vector2u frameStage = { 0,0 };
 	float frameDelay = 0;
-	Walking walkingSound;
+	Jump jumpSound;
 
 };
 

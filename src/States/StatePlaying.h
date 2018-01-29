@@ -3,7 +3,6 @@
 
 #include "StateBase.h"
 #include "../Entities/Player.h"
-//#include "../Entities/Entity.h"
 #include "../Util/Camera.h"
 #include "../World/Map.h"
 #include "../GUI/inGameMenu.h"

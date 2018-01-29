@@ -5,6 +5,18 @@ TileCollision::TileCollision()
 {
 }
 
+void TileCollision::CheckForGround(sf::RectangleShape & tile, Player & entity)
+{
+	sf::FloatRect entityBounds = entity.getAABB();
+
+	entityBounds.height = entity.getAABB().height + 5;
+
+	if (entityBounds.intersects(tile.getGlobalBounds()))
+	{//since I couldnt get it to get false when we arent touching anything, I made it turn false in player class in player update function
+		entity.isOnGround = true;
+	}
+}
+
 void TileCollision::Collide(sf::RectangleShape& tile, Player &entity)
 {
 	if (entity.getAABB().intersects(tile.getGlobalBounds()))
@@ -19,18 +31,18 @@ void TileCollision::Collide(sf::RectangleShape& tile, Player &entity)
 		float BlockTop = tile.getPosition().y;
 		float BlockBottom = tile.getPosition().y + tile.getSize().y;
 
-		if (entityRight > BlockLeft - 10 &&
+		if (entityRight > BlockLeft - 10 && //these acked values should be tweaked for better collision detection
 			entityLeft < BlockRight + 10 &&
 			entityBottom > BlockTop + 20 &&
 			entityTop < BlockBottom - 20)
 		{
-			if (entityRight >= BlockLeft && entityLeft <= BlockLeft)  //Left side of the Block
+			if (entityRight >= BlockLeft && entityLeft <= BlockLeft && entity.velocity.x >= 0)  //Left side of the Block
 			{
 				entity.entityRec.move(-abs(entity.velocity.x), 0);
 				entity.velocity.x = 0;
 			}
 
-			if (entityLeft <= BlockRight && entityRight >= BlockRight)   //Right side of the block
+			if (entityLeft <= BlockRight && entityRight >= BlockRight && entity.velocity.x <= 0)   //Right side of the block
 			{
 				entity.entityRec.move(abs(entity.velocity.x), 0);
 				entity.velocity.x = 0;
@@ -42,18 +54,16 @@ void TileCollision::Collide(sf::RectangleShape& tile, Player &entity)
 			entityBottom > BlockTop - 10 &&
 			entityTop < BlockBottom + 10)
 		{
-			if (entityTop < BlockBottom && entityBottom > BlockBottom)    //Bottom side of the block
+			if (entityTop < BlockBottom && entityBottom > BlockBottom && entity.velocity.y <= 0)    //Bottom side of the block
 			{
 				entity.entityRec.move(0, -entity.velocity.y);
-				entity.velocity.y = 0;
+				entity.velocity.y = 0.1; //because when its 0 it can jump again. Fix it later
 			}
 
-			if (entityBottom > BlockTop && entityTop < BlockTop)    //Top side of the block
+			if (entityBottom > BlockTop && entityTop < BlockTop && entity.velocity.y >= 0)    //Top side of the block
 			{
 				entity.isJumping = false;
-				entity.isOnGround = true;
-				//entity.entityRec.move(0, -abs(entity.velocity.y));//abs is here to make sure it always pushes you up
-				entity.entityRec.setPosition(entity.getPos().x, tile.getGlobalBounds().top - tile.getSize().y/2);
+				entity.entityRec.setPosition(entity.getPos().x, tile.getGlobalBounds().top - tile.getSize().y / 2);
 				entity.velocity.y = 0;
 			}
 		}

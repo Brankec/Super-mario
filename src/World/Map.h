@@ -56,7 +56,7 @@ public:
 
 
 
-
+	std::vector<BasicTiles> FTiles; //foreground layer
 	std::vector<BasicTiles> MTiles; //main layer
 	std::vector<BasicTiles> BTiles; //background layer
 };

@@ -3,16 +3,16 @@
 
 
 Player::Player()
-	: walkingSound("footstep")
+	: jumpSound("jump_super")
 {
 	entityRec.setSize({ 64,64 });
-	entityRec.setPosition(30, 1314);
+	entityRec.setPosition(30, 800);
 	entityRec.setOrigin(entityRec.getSize().x / 2, entityRec.getSize().y / 2);
 	loadTextureToRec();
 	loadPlayerAnimation();
 	entityRec.setTextureRect(sf::IntRect(0, 0, 7, 11));
 
-	speedMAX = 4;
+	speedMAX = 8;
 	stamina = 100;
 
 	gravity = 0.4;
@@ -28,22 +28,35 @@ void Player::loadPlayerAnimation()
 
 	//moving stage
 	playerFrame[0][1] = { 19, 0, 16, 16 };
-	playerFrame[1][1] = { 38, 0, 13, 16 };
+	playerFrame[1][1] = { 38, 0, 14, 16 };
 	playerFrame[2][1] = { 52, 0, 16, 16 };
 }
 
 void Player::playerUpdate(float deltaTime)
 {
-	if (std::round(velocity.y) != 0)
+	if (velocity.y != 0) //this is only temporary. atm isOnGround is true whenever I touch anything at any side
 	{
 		isOnGround = false;
 	}
 
-	if (velocity.y < 20 && isOnGround == false)
+	if (velocity.y < 7 && isOnGround == false)
+	{
 		velocity.y += gravity;
+	}
+	else if (isOnGround == true)
+	{
+		isOnGround = false;
+	}
 
-	//setPos();
+
+	if ((entityRec.getPosition().x - entityRec.getSize().x / 2) <= (Camera::getView().getCenter().x - Camera::getView().getSize().x / 2))
+	{
+		entityRec.move(-velocity.x, 0);
+		velocity.x = 0;
+	}
+
 	playerAnimation();
+
 	frameDelay += deltaTime;
 }
 
@@ -60,16 +73,16 @@ float Player::Lerp(float x, float y, float z) //acceleration or deceleration
 void Player::playerControl()
 {
 	//X axis
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && entityRec.getPosition().x)
 	{
-		velocity.x = Lerp(velocity.x, speedMAX, 0.05f); //1) current speed ,2) max speed, 3)acceleration speed
+		velocity.x = Lerp(velocity.x, speedMAX, 0.02f); //1) current speed ,2) max speed, 3)acceleration speed
 
 		entityRec.setScale(1, 1); //for turning right
 		Angle = 90;
 
 		if (frameStage.x < 3)
 		{
-			if (frameDelay > 0.5f / abs(velocity.x))
+			if (frameDelay > 0.3f / abs(velocity.x))
 			{
 				frameDelay = 0;
 				frameStage.x++;
@@ -80,14 +93,14 @@ void Player::playerControl()
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		velocity.x = Lerp(velocity.x, -speedMAX, 0.05f);
+		velocity.x = Lerp(velocity.x, -speedMAX, 0.02f);
 
 		entityRec.setScale(-1, 1); //for turning left
 		Angle = -90;
 
 		if (frameStage.x < 3)
 		{
-			if (frameDelay > 0.5f / abs(velocity.x))
+			if (frameDelay > 0.3f / abs(velocity.x))
 			{
 				frameDelay = 0;
 				frameStage.x++;
@@ -109,8 +122,9 @@ void Player::playerControl()
 	}
 
 	//Y axis
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && isOnGround)
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && isOnGround && velocity.y == 0) //last parameter is only temp until isOnGround works properly
 	{
+		jumpSound.playSound(30);
 		velocity.y = -15;
 	}
 
@@ -121,7 +135,7 @@ void Player::playerControl()
 	}
 	else
 	{
-		speedMAX = 4;
+		speedMAX = 6;
 	}
 }
 
@@ -132,7 +146,7 @@ void Player::playerAnimation()
 	{
 		entityRec.setTextureRect(playerFrame[0][0]); // stand still
 	}
-	else if(isOnGround)
+	else if(isOnGround || velocity.y == 0)
 	{
 		entityRec.setTextureRect(playerFrame[frameStage.x][1]); //run
 	}

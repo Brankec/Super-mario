@@ -62,12 +62,8 @@ void StatePlaying::update(sf::Time deltaTime)
 
 		player.playerUpdate(deltaTime.asSeconds());
 
-		std::cout << player.isOnGround << std::endl;
-
 		map.CollisionMain(player);
 		player.setPos();
-
-		//std::cout << player.velocity.y << std::endl;
 
 		Camera::followPlayerSmooth(player.getPos(), deltaTime.asSeconds());
 	}
@@ -87,7 +83,7 @@ void StatePlaying::render(sf::RenderTarget& renderer)
 		map.drawBackGround(renderer); //Background
 		map.drawMain(renderer); //Main (player base)
 		renderer.draw(player.entityRec); //player
-		//map.drawForeGround(renderer); //Foreground
+		map.drawForeGround(renderer); //Foreground
 		renderer.setView(renderer.getDefaultView()); //resets the view to default state
 
 		if (openMenu)

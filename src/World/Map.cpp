@@ -48,14 +48,9 @@ void Map::loadTilesForeground()
 		openfileForeground >> tileLocation;
 
 		if (tileTexture.loadFromFile(tileLocation))
-			tile[3].setTexture(&tileTexture);
-
-		tile[3].setSize(sf::Vector2f((float)powOfN, (float)powOfN));
-
 		while (openfileForeground.good())
 		{
 			openfileForeground >> tileIndex;
-			if (tileIndex != ',')
 			tempMap.push_back(Sprite_sheet_coordinates(tileIndex-1)); //the indices will always be for 1 less inside the code(so 0 is actually -1 and 1 is actually 0)
 
 			if (openfileForeground.peek() == '\n')
@@ -66,32 +61,29 @@ void Map::loadTilesForeground()
 			
 		}
 	}
+
+	if (mapForeGround.size() != 0)
+	{
+		for (int x = 0; x < mapForeGround[1].size(); x++)
+		{
+			for (int y = 0; y < mapForeGround.size(); y++)
+			{
+				if (mapForeGround[y][x].x != -1 && mapForeGround[y][x].y != -1)
+				{
+					FTiles.emplace_back(x * (float)powOfN, y * (float)powOfN, tileTexture, mapForeGround[y][x]);
+				}
+			}
+		}
+	}
 }
 void Map::drawForeGround(sf::RenderTarget& renderer)
 {
 	if (mapForeGround.size() != 0)
 	{
-		float cam_x = Camera::getView().getCenter().x;
-		int cam_x_tile = cam_x / tile[3].getSize().x;
-		int Tile_row_width = (renderer.getView().getSize().x + 2000) / mapForeGround[1].size();
-		float cam_y = Camera::getView().getCenter().y;
-		int cam_y_tile = cam_y / tile[3].getSize().y;
-		int Tile_column_height = (renderer.getView().getSize().y) / mapForeGround.size();
-
-		int X_border_right = std::min((int)mapForeGround[1].size(), cam_x_tile + Tile_row_width / 2);
-		int Y_border_right = std::min((int)mapForeGround.size(), cam_y_tile + Tile_column_height / 2);
-
-		for (int x = std::max(cam_x_tile - Tile_row_width / 2, 0); x < X_border_right; x++)
-			for (int y = std::max(cam_y_tile - Tile_column_height / 2, 0); y < Y_border_right; y++)
-			{
-				if (mapForeGround[y][x].x != -1 && mapForeGround[y][x].y != -1)
-				{
-					tile[3].setPosition(x * (float)powOfN, y * (float)powOfN);
-					tile[3].setTextureRect(sf::IntRect(mapForeGround[y][x].x, mapForeGround[y][x].y, tileSize.x, tileSize.y));
-
-					renderer.draw(tile[3]);
-				}
-			}
+		for (auto& fTile : FTiles)
+		{
+			fTile.drawTile(renderer);
+		}
 	}
 }
 
