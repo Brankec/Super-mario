@@ -28,18 +28,23 @@ void BasicTiles::ToggleCollision(bool set)
 	doesCollide = set;
 }
 
-void BasicTiles::Collision(Player & entity)
+void BasicTiles::Collision(sf::FloatRect entity, bool* isColliding)
 {
 	if (doesCollide)
 	{
-		CheckForGround(tileRec, entity);
-		Collide(tileRec, entity);
+		//CheckForGround(tileRec, entity, isColliding);
+		Collide(tileRec, entity, isColliding);
 	}
 }
 
 void BasicTiles::drawTile(sf::RenderTarget & renderer)
 {
-	renderer.draw(tileRec);
+
+	if ((tileRec.getPosition().x + 64 + tileRec.getSize().x / 2) >= (Camera::getView().getCenter().x - Camera::getView().getSize().x / 2) && //draws only within our view on X axis
+		(tileRec.getPosition().x - tileRec.getSize().x / 2) <= (Camera::getView().getCenter().x + Camera::getView().getSize().x / 2))
+	{
+		renderer.draw(tileRec);
+	}
 }
 
 sf::RectangleShape BasicTiles::getTile()

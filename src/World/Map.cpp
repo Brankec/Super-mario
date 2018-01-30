@@ -138,20 +138,21 @@ void Map::drawMain(sf::RenderTarget & renderer)
 	{
 		for (auto& mTile : MTiles)
 		{
-			renderer.draw(mTile.getTile());
+			mTile.drawTile(renderer);
 		}
 	}
 }
-void Map::CollisionMain(Player & player)
+void Map::CollisionMain(sf::FloatRect entity, bool* isColliding)
 {
 	if (mapMain.size() != 0)
 	{
 		for (auto& mTile : MTiles)
 		{
-			mTile.Collision(player);
+			mTile.Collision(entity, isColliding);
 		}
 	}
 }
+/////////////////////////////////////////////////////////////REWRITE THE WAY YOU HANDLE COLLISION ONCE IT HAPPENS. TELL IF IT HAPPENS DONT PUSH IT HERE
 
 void Map::loadTilesBackground()
 {

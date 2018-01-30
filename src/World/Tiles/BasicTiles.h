@@ -26,7 +26,7 @@ public:
 
 	void ToggleCollision(bool set);
 
-	void Collision(Player &entity);
+	void Collision(sf::FloatRect entity, bool* isColliding);
 
 	void drawTile(sf::RenderTarget& renderer);
 

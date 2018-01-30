@@ -25,7 +25,7 @@ public:
 
 	void loadTilesMain();//main player layer with all 4 collisions
 	void drawMain(sf::RenderTarget& renderer);
-	void CollisionMain(Player & player);
+	void CollisionMain(sf::FloatRect entity, bool* isColliding);
 
 	void loadTilesBackground();//for decorations
 	void drawBackGround(sf::RenderTarget& renderer);

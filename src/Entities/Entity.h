@@ -25,6 +25,8 @@ public:
 
 	int Angle = 90;
 
+	bool isColliding[4];//collision goes clock wise 0) is left, 1) is bottom, 2) is right, 3) is top
+
 protected:
 	int currentHealth = 10;
 	int maxHealth = 10;
