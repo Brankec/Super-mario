@@ -1,7 +1,7 @@
 #include "StatePlaying.h"
 
 StatePlaying::StatePlaying(Game& game)
-	: StateBase(game)
+:   StateBase   (game)
 {
 	map.loadMap(levels);
 }
@@ -60,8 +60,10 @@ void StatePlaying::update(sf::Time deltaTime)
 			player.isFinished = false;
 		}
 
-		map.CollisionMain(player.playerRec.getGlobalBounds(), player.isColliding);
 		player.playerUpdate(deltaTime.asSeconds());
+
+		map.Collision(player);
+		player.setPos();
 
 		Camera::followPlayerSmooth(player.playerRec.getPosition(), deltaTime.asSeconds());
 	}
@@ -77,15 +79,21 @@ void StatePlaying::fixedUpdate(sf::Time deltaTime)
 
 void StatePlaying::render(sf::RenderTarget& renderer)
 {
-	renderer.setView(Camera::getView({ 10.f, 1.f })); //background scroll
-	map.drawBackGround(renderer); //Background
-	map.drawMain(renderer); //Main (player base)
-	renderer.draw(player.playerRec); //player
-	map.drawForeGround(renderer); //Foreground
-	renderer.setView(renderer.getDefaultView()); //resets the view to default state
+		renderer.setView(Camera::getView({ 10.f, 1.f })); //background scroll
 
-	if (openMenu)
-		renderMenu(renderer);
+		map.drawBackGround(renderer); //Background
+
+		map.drawStatic(renderer); //Main (player base)
+		map.drawDynamic(renderer); //Main (player base)
+
+		renderer.draw(player.playerRec); //player
+
+		map.drawForeGround(renderer); //Foreground
+
+		renderer.setView(renderer.getDefaultView()); //resets the view to default state
+
+		if (openMenu)
+			renderMenu(renderer);
 }
 
 void StatePlaying::pushState(bool*m_shouldPush)

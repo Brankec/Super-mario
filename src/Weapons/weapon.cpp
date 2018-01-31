@@ -12,6 +12,7 @@ void weapon::fire(const sf::Vector2f& playerPosition, float angle, sf::SoundBuff
 	int speed = 5;
 	if (time > delayTime)
 	{
+		//weaponSound.playSound(soundBuffer, 30);
 		projectiles.emplace_back(playerPosition, m_yaw, projectileSpeed, projectileSize);
 		time = 0;
 	}

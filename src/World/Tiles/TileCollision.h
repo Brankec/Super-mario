@@ -11,7 +11,7 @@ public:
 
 
 protected:
-	void CheckForGround(sf::RectangleShape& tile, sf::FloatRect entity, bool* isCollide);
-	void Collide(sf::RectangleShape& tile, sf::FloatRect entity, bool* isCollide);
+	void CheckForGround(sf::RectangleShape& tile, Player &entity);
+	void CollidePlayer(sf::RectangleShape& tile, Player &entity);
 };
 

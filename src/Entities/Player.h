@@ -19,7 +19,7 @@ public:
 	void playerAnimation();
 
 	bool isJumping = false;
-	bool isColliding[4] = { false, false, false, false }; //collision goes clock wise 0) is left, 1) is bottom, 2) is right, 3) is top
+	bool isOnGround = false;
 	bool isFinished = false;
 
 private:

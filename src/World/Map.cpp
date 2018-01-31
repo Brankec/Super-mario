@@ -3,7 +3,6 @@
 
 Map::Map()
 {
-	setOriginCenter();
 }
 
 void Map::loadMap(Level& levelsPass)
@@ -11,8 +10,11 @@ void Map::loadMap(Level& levelsPass)
 	if (openfileForeground.is_open())
 		openfileForeground.close();
 
-	if (openfileMain.is_open())
-		openfileMain.close();
+	if (openfileStatic.is_open())
+		openfileStatic.close();
+
+	if (openfileDynamic.is_open())
+		openfileDynamic.close();
 
 	if (openfileBackground.is_open())
 		openfileBackground.close();
@@ -20,7 +22,8 @@ void Map::loadMap(Level& levelsPass)
 	this->levels = &levelsPass;
 
 	openfileForeground.open("res/Maps/" + levels->ForeGround + ".txt");
-	openfileMain.open("res/Maps/" + levels->Main + ".txt");
+	openfileStatic.open("res/Maps/" + levels->Static + ".txt");
+	openfileDynamic.open("res/Maps/" + levels->Dynamic + ".txt");
 	openfileBackground.open("res/Maps/" + levels->BackGround + ".txt");
 
 	this->powOfN = pow(2, levels->gridSize);
@@ -29,13 +32,9 @@ void Map::loadMap(Level& levelsPass)
 	this->objectiveTileCoords = levels->objectiveTileCoords;
 
 	loadTilesForeground();
-	loadTilesMain();
+	loadTilesStatic();
+	loadTilesDynamic();
 	loadTilesBackground();
-}
-
-void Map::setOriginCenter()
-{
-	tile[2].setOrigin(sf::Vector2f(tile[0].getSize().x / 2, tile[0].getSize().y / 2));
 }
 
 void Map::loadTilesForeground()
@@ -87,72 +86,125 @@ void Map::drawForeGround(sf::RenderTarget& renderer)
 	}
 }
 
-void Map::loadTilesMain()
+void Map::loadTilesStatic()
 {
-	mapMain.clear();
+	mapStatic.clear();
 
-	if (openfileMain.is_open())
+	if (openfileStatic.is_open())
 	{
 		std::string tileLocation;
-		openfileMain >> tileLocation;
+		openfileStatic >> tileLocation;
 
 		if (tileTexture.loadFromFile(tileLocation))
 
-		while (openfileMain.good())
+		while (openfileStatic.good())
 		{
-			openfileMain >> tileIndex;
+			openfileStatic >> tileIndex;
 			if (tileIndex != ',')
 			{
 				tempMap.push_back(Sprite_sheet_coordinates(tileIndex - 1)); //the indices will always be for 1 less inside the code(so 0 is actually -1 and 1 is actually 0)
 
-				if (openfileMain.peek() == '\n')
+				if (openfileStatic.peek() == '\n')
 				{
-					mapMain.push_back(tempMap);
+					mapStatic.push_back(tempMap);
 					tempMap.clear();
 				}
 			}
 		}
 	}
-	if (mapMain.size() != 0)
+	if (mapStatic.size() != 0)
 	{
-		for (int x = 0; x < mapMain[1].size(); x++)
+		for (int x = 0; x < mapStatic[1].size(); x++)
 		{
-			for (int y = 0; y < mapMain.size(); y++)
+			for (int y = 0; y < mapStatic.size(); y++)
 			{
-				if (mapMain[y][x].x != -1 && mapMain[y][x].y != -1)
+				if (mapStatic[y][x].x != -1 && mapStatic[y][x].y != -1)
 				{
-					MTiles.emplace_back(x * (float)powOfN, y * (float)powOfN, tileTexture, mapMain[y][x]);
+					STiles.emplace_back(x * (float)powOfN, y * (float)powOfN, tileTexture, mapStatic[y][x]);
 				}
 			}
 		}
 	}
+}
+void Map::drawStatic(sf::RenderTarget & renderer)
+{
+	if (mapStatic.size() != 0)
+	{
+		for (auto& sTile : STiles)
+		{
+			renderer.draw(sTile.getTile());
+		}
+	}
+}
+void Map::loadTilesDynamic()
+{
+	mapDynamic.clear();
 
-	for (auto& mTile : MTiles) //setup
+	if (openfileDynamic.is_open())
 	{
-		mTile.ToggleCollision(true);
+		std::string tileLocation;
+		openfileDynamic >> tileLocation;
+
+		if (tileTexture.loadFromFile(tileLocation))
+
+			while (openfileDynamic.good())
+			{
+				openfileDynamic >> tileIndex;
+				if (tileIndex != ',')
+				{
+					tempMap.push_back(Sprite_sheet_coordinates(tileIndex - 1)); //the indices will always be for 1 less inside the code(so 0 is actually -1 and 1 is actually 0)
+
+					if (openfileDynamic.peek() == '\n')
+					{
+						mapDynamic.push_back(tempMap);
+						tempMap.clear();
+					}
+				}
+			}
 	}
-}
-void Map::drawMain(sf::RenderTarget & renderer)
-{
-	if (mapMain.size() != 0)
+	if (mapDynamic.size() != 0)
 	{
-		for (auto& mTile : MTiles)
+		for (int x = 0; x < mapDynamic[1].size(); x++)
 		{
-			mTile.drawTile(renderer);
+			for (int y = 0; y < mapDynamic.size(); y++)
+			{
+				if (mapDynamic[y][x].x != -1 && mapDynamic[y][x].y != -1)
+				{
+					DTiles.emplace_back(x * (float)powOfN, y * (float)powOfN, tileTexture, mapDynamic[y][x]);
+				}
+			}
 		}
 	}
 }
-void Map::CollisionMain(sf::FloatRect entity, bool* isColliding)
+void Map::drawDynamic(sf::RenderTarget & renderer)
 {
-	if (mapMain.size() != 0)
+	if (mapDynamic.size() != 0)
 	{
-		for (auto& mTile : MTiles)
+		for (auto& dTile : DTiles)
 		{
-			mTile.Collision(entity, isColliding);
+			renderer.draw(dTile.getTile());
 		}
 	}
 }
-/////////////////////////////////////////////////////////////REWRITE THE WAY YOU HANDLE COLLISION ONCE IT HAPPENS. TELL IF IT HAPPENS DONT PUSH IT HERE
+
+void Map::Collision(Player & player)
+{
+	if (mapStatic.size() != 0)
+	{
+		for (auto& sTile : STiles)
+		{
+			sTile.Collision(player);
+		}
+	}
+
+	if (mapDynamic.size() != 0)
+	{
+		for (auto& dTile : DTiles)
+		{
+			dTile.Collision(player);
+		}
+	}
+}
 
 void Map::loadTilesBackground()
 {

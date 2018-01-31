@@ -13,12 +13,12 @@
 
 #pragma once
 
-class BasicTiles 
+class StaticTiles
 	: public Tile
 	, public TileCollision
 {
 public:
-	BasicTiles(int TilePositionX, int TilePositionY, sf::Texture& tileTexture, sf::Vector2f tileIndex);
+	StaticTiles(int TilePositionX, int TilePositionY, sf::Texture& tileTexture, sf::Vector2f tileIndex);
 
 	void setTileTexture(sf::Vector2f tileIndex);
 	
@@ -26,7 +26,7 @@ public:
 
 	void ToggleCollision(bool set);
 
-	void Collision(sf::FloatRect entity, bool* isColliding);
+	void Collision(Player &entity);
 
 	void drawTile(sf::RenderTarget& renderer);
 

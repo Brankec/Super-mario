@@ -5,72 +5,66 @@ TileCollision::TileCollision()
 {
 }
 
-void TileCollision::CheckForGround(sf::RectangleShape & tile, sf::FloatRect entity, bool* isCollide)
+void TileCollision::CheckForGround(sf::RectangleShape & tile, Player & player)
 {
-	sf::FloatRect entityBounds = entity;
+	sf::FloatRect playerBounds = player.playerRec.getGlobalBounds();
 
-	entityBounds.height = entity.height + 5;
+	playerBounds.height = player.playerRec.getGlobalBounds().height + 5;
 
-	if (entityBounds.intersects(tile.getGlobalBounds()))
+	if (playerBounds.intersects(tile.getGlobalBounds()))
 	{//since I couldnt get it to get false when we arent touching anything, I made it turn false in player class in player update function
-		//entity.isOnGround = true;
-		//isCollide[1] = true;
+		player.isOnGround = true;
 	}
 }
 
-void TileCollision::Collide(sf::RectangleShape& tile, sf::FloatRect entity, bool* isCollide)
+void TileCollision::CollidePlayer(sf::RectangleShape& tile, Player &player)
 {
-	if (entity.intersects(tile.getGlobalBounds()))
+	if (player.playerRec.getGlobalBounds().intersects(tile.getGlobalBounds()))
 	{
-		float entityLeft = entity.left - entity.width / 2;
-		float entityRight = entity.left + entity.width / 2;
-		float entityTop = entity.top - entity.height / 2;
-		float entityBottom = entity.top + entity.height / 2;
+		float playerLeft = player.playerRec.getPosition().x - player.playerRec.getGlobalBounds().width / 2;
+		float playerRight = player.playerRec.getPosition().x + player.playerRec.getGlobalBounds().width / 2;
+		float playerTop = player.playerRec.getPosition().y - player.playerRec.getGlobalBounds().height / 2;
+		float playerBottom = player.playerRec.getPosition().y + player.playerRec.getGlobalBounds().height / 2;
 
-		float BlockLeft = tile.getPosition().x - tile.getSize().x;
+		float BlockLeft = tile.getPosition().x;
 		float BlockRight = tile.getPosition().x + tile.getSize().x;
-		float BlockTop = tile.getPosition().y - tile.getSize().y;
+		float BlockTop = tile.getPosition().y;
 		float BlockBottom = tile.getPosition().y + tile.getSize().y;
 
-		if (entityRight > BlockLeft - 10 && //these acked values should be tweaked for better collision detection
-			entityLeft < BlockRight + 10 &&
-			entityBottom > BlockTop + 20 &&
-			entityTop < BlockBottom - 20)
+		if (playerRight > BlockLeft && //these acked values should be tweaked for better collision detection
+			playerLeft < BlockRight &&
+			playerBottom > BlockTop + 5 &&
+			playerTop < BlockBottom - 5)
 		{
-			if (entityRight >= BlockLeft && entityLeft <= BlockLeft)  //Left side of the Block
+			if (playerRight >= BlockLeft && playerLeft <= BlockLeft && player.velocity.x >= 0)  //Left side of the Block
 			{
-				//entity.playerRec.move(-abs(entity.velocity.x), 0);
-				//entity.velocity.x = 0;
-				isCollide[0] = true;
-				//std::cout << "Left!" << std::endl;
+				player.playerRec.move(-abs(player.velocity.x), 0);
+				player.velocity.x = 0;
 			}
 
-			if (entityLeft <= BlockRight && entityRight >= BlockRight)   //Right side of the block
+			if (playerLeft <= BlockRight && playerRight >= BlockRight && player.velocity.x <= 0)   //Right side of the block
 			{
-				//entity.playerRec.move(abs(entity.velocity.x), 0);
-				//entity.velocity.x = 0;
-				isCollide[2] = true;
-				//std::cout << "Right!" << std::endl;
+				player.playerRec.move(abs(player.velocity.x), 0);
+				player.velocity.x = 0;
 			}
 
 		}
-		if (entityRight > BlockLeft + 20 &&
-			entityLeft < BlockRight - 20 &&
-			entityBottom > BlockTop - 10 &&
-			entityTop < BlockBottom + 10)
+		if (playerRight > BlockLeft + 5 &&
+			playerLeft < BlockRight - 5 &&
+			playerBottom > BlockTop &&
+			playerTop < BlockBottom)
 		{
-			if (entityTop < BlockBottom && entityBottom > BlockBottom)    //Bottom side of the block
+			if (playerTop < BlockBottom && playerBottom > BlockBottom && player.velocity.y <= 0)    //Bottom side of the block
 			{
-				//entity.playerRec.move(0, -entity.velocity.y);
-				//entity.velocity.y = 0.1; //because when its 0 it can jump again. Fix it later
+				player.playerRec.move(0, -player.velocity.y);
+				player.velocity.y = 0.1; //because when its 0 it can jump again. Fix it later
 			}
 
-			if (entityBottom > BlockTop && entityTop < BlockTop)    //Top side of the block
+			if (playerBottom > BlockTop && playerTop < BlockTop && player.velocity.y >= 0)    //Top side of the block
 			{
-				//entity.isJumping = false;
-				isCollide[1] = true;
-				//entity.playerRec.setPosition(entity.playerRec.getPosition().x, tile.getGlobalBounds().top - tile.getSize().y / 2);
-				//entity.velocity.y = 0;
+				player.isJumping = false;
+				player.playerRec.setPosition(player.playerRec.getPosition().x, tile.getGlobalBounds().top - tile.getSize().y / 2);
+				player.velocity.y = 0;
 			}
 		}
 	}

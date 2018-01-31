@@ -8,7 +8,9 @@
 #include "../Entities/Player.h"
 #include "../Util/Camera.h"
 #include "../World/Level.h"
-#include "Tiles/BasicTiles.h"
+#include "Tiles/DynamicTiles.h"
+#include "Tiles/StaticTiles.h"
+#include "Tiles/BackgroundTiles.h"
 
 #pragma once
 
@@ -23,17 +25,16 @@ public:
 	void loadTilesForeground();//for deocrations
 	void drawForeGround(sf::RenderTarget& renderer);
 
-	void loadTilesMain();//main player layer with all 4 collisions
-	void drawMain(sf::RenderTarget& renderer);
-	void CollisionMain(sf::FloatRect entity, bool* isColliding);
+	void loadTilesStatic();//main player layer with all 4 collisions
+	void drawStatic(sf::RenderTarget& renderer);
+	void loadTilesDynamic();
+	void drawDynamic(sf::RenderTarget& renderer);
+	void Collision(Player & player);
 
 	void loadTilesBackground();//for decorations
 	void drawBackGround(sf::RenderTarget& renderer);
 
-
-	void setOriginCenter();
 	sf::Vector2f Sprite_sheet_coordinates(int tileIndex);
-
 
 public:
 	Level* levels;
@@ -41,23 +42,24 @@ public:
 	int tileIndex = 0;
 	int objectiveTileCoords = 0;
 	sf::Texture tileTexture;
-	sf::RectangleShape tile[5];  // 0) background, 1) background-main(only top has collision), 2) main(playerbase), 3) foreground 4) interactables
 	sf::Vector2i tileSize;
 
-	std::vector<std::vector<sf::Vector2f>> mapForeGround, mapBackGround, mapMain;
+	std::vector<std::vector<sf::Vector2f>> mapForeGround, mapBackGround, mapDynamic, mapStatic;
 	std::vector<sf::Vector2f> tempMap;
 	sf::Vector2i loadCounter;
 	int amountOfTiles;
 
 	//open the file containing the tile name and tile positions
 	std::ifstream openfileForeground;
-	std::ifstream openfileMain;
+	std::ifstream openfileDynamic;
+	std::ifstream openfileStatic;
 	std::ifstream openfileBackground;
 
 
 
-	std::vector<BasicTiles> FTiles; //foreground layer
-	std::vector<BasicTiles> MTiles; //main layer
-	std::vector<BasicTiles> BTiles; //background layer
+	std::vector<BackgroundTiles> FTiles; //foreground layer
+	std::vector<DynamicTiles> DTiles; //static tiles
+	std::vector<StaticTiles> STiles; //dynamic tiles
+	std::vector<BackgroundTiles> BTiles; //background layer
 };
 

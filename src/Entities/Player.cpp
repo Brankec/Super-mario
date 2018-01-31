@@ -6,7 +6,7 @@ Player::Player()
 	: jumpSound("jump_super")
 {
 	playerRec.setSize({ 64,64 });
-	playerRec.setPosition(8*64, 400);
+	playerRec.setPosition(8*64, 800);
 	playerRec.setOrigin(playerRec.getSize().x / 2, playerRec.getSize().y / 2);
 
 	if (playerTex.loadFromFile("res/entities/sprite/mario_small.png"))
@@ -15,9 +15,9 @@ Player::Player()
 	loadPlayerAnimation();
 	playerRec.setTextureRect(sf::IntRect(0, 0, 7, 11));
 
-	speedMAX = 8;
+	speedMAX = 2;
 
-	gravity = 0.4;
+	gravity = 0.3;
 }
 
 void Player::loadPlayerAnimation()
@@ -36,47 +36,45 @@ void Player::loadPlayerAnimation()
 
 void Player::playerUpdate(float deltaTime)
 {
-	if(isColliding[1] == true)
+	if (velocity.y != 0) //this is only temporary. atm isOnGround is true whenever I touch anything at any side
 	{
-		//playerRec.setPosition(playerRec.getPosition().x, playerRec.getPosition().y);
-		//playerRec.move(0, -abs(velocity.y) - 1);
-		velocity.y = 0;
+		isOnGround = false;
 	}
-	if (velocity.y < 7 && isColliding[1] == false)
+
+	if (velocity.y < 7 && isOnGround == false)
 	{
 		velocity.y += gravity;
 	}
-
-	if (isColliding[0])
+	else if (isOnGround == true)
 	{
-		//std::cout << "Left!" << std::endl;
-	}
-	if (isColliding[2])
-	{
-		//std::cout << "Right!" << std::endl;
-	}
-	if (isColliding[1])
-	{
-		//std::cout << "bottom!" << std::endl;
+		isOnGround = false;
 	}
 
 	if ((playerRec.getPosition().x - playerRec.getSize().x / 2) <= (Camera::getView().getCenter().x - Camera::getView().getSize().x / 2)) //The moving invisible left wall
 	{
-		playerRec.move(-velocity.x, 0);
+		playerRec.setPosition((Camera::getView().getCenter().x - Camera::getView().getSize().x / 2) + 0.01 + playerRec.getSize().x / 2, playerRec.getPosition().y);
 		velocity.x = 0;
+	}
+
+
+	frameDelay += deltaTime;
+
+	if (frameStage.x < 3)
+	{
+		if (velocity.x != 0 && frameDelay > 0.1f / abs(velocity.x))
+		{
+			frameDelay = 0;
+			frameStage.x++;
+		}
+	}
+	else
+	{
+		frameStage.x = 0;
 	}
 
 	playerAnimation();
 
-	frameDelay += deltaTime;
-
 	setPos();
-
-	isColliding[0] = false; //left
-	isColliding[1] = false; //bottom
-	isColliding[2] = false; //right
-	isColliding[3] = false; //top
-
 }
 
 void Player::setPos()
@@ -98,17 +96,6 @@ void Player::playerControl()
 
 		playerRec.setScale(1, 1); //for turning right
 		Angle = 90;
-
-		if (frameStage.x < 2)
-		{
-			if (frameDelay > 0.5f / abs(velocity.x))
-			{
-				frameDelay = 0;
-				frameStage.x++;
-			}
-		}
-		else
-			frameStage.x = 0;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
@@ -116,24 +103,13 @@ void Player::playerControl()
 
 		playerRec.setScale(-1, 1); //for turning left
 		Angle = -90;
-
-		if (frameStage.x < 2)
-		{
-			if (frameDelay > 0.5f / abs(velocity.x))
-			{
-				frameDelay = 0;
-				frameStage.x++;
-			}
-		}
-		else
-			frameStage.x = 0;
 	}
 	else
 	{
-		if (isColliding[1])
+		if (isOnGround)
 		{
 			frameStage.x = 0;
-			velocity.x = Lerp(velocity.x, 0, 0.1f);
+			velocity.x = Lerp(velocity.x, 0, 0.03f);
 
 			if (abs(velocity.x) < 0.3f)
 				velocity.x = round(velocity.x);
@@ -141,21 +117,21 @@ void Player::playerControl()
 	}
 
 	//Y axis
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && isColliding == false && isJumping == false)
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && isOnGround == true && isJumping == false)
 	{
 		isJumping = true;
-		//jumpSound.playSound(30);
-		velocity.y = -15;
+		jumpSound.playSound(30);
+		velocity.y = -9;
 	}
 
 	//Sprint
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))   //not sure if this will be in the game
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))   //only for bugtesting
 	{
-		speedMAX = 15;
+		speedMAX = 3;
 	}
 	else
 	{
-		speedMAX = 6;
+		speedMAX = 2;
 	}
 }
 
@@ -166,13 +142,13 @@ void Player::playerAnimation()
 	{
 		playerRec.setTextureRect(playerFrame[0][0]); // stand still
 	}
-	//else if(isColliding[1] || velocity.y == 0)
-	//{
-	//	playerRec.setTextureRect(playerFrame[frameStage.x][1]); //run
-	//}
+	else if(isOnGround || velocity.y == 0)
+	{
+		playerRec.setTextureRect(playerFrame[frameStage.x][1]); //run
+	}
 
 	
-	if (std::round(velocity.y) != 0)
+	if (velocity.y != 0)
 	{
 		playerRec.setTextureRect(playerFrame[1][0]); // jump
 	}

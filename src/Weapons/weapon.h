@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Projectile.h"
 
+
 #pragma once
 class weapon
 {
@@ -32,6 +33,7 @@ public:
 
 public:
 	std::vector<Projectile> projectiles;
+	//PlayWeaponSound weaponSound;
 	float time = 0;
 	float delayTime = 0;
 };

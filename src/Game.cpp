@@ -6,6 +6,7 @@
 Game::Game()
 :   m_window    ({400*3, 300*3}, "Super Mario Bros") //for 4:3 ratio
 {
+	//m_window.setView(view);
     m_window.setFramerateLimit(100);
 
 	pushState<StateMenu>(*this); //game menu. Other states get pushed/popped from this point

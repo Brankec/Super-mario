@@ -43,6 +43,8 @@ void inGameMenu::RestartGame(Player& player)
 
 
 
+
+
 void inGameMenu::renderMenu(sf::RenderTarget& renderer)
 {
 	renderer.draw(MenuBackground);

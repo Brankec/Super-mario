@@ -15,5 +15,6 @@ protected:
 	sf::Vector2i tileTextureSize = { 32, 32 }; //default
 
 	bool doesCollide = false; //default
+	bool doesDestroy = false; //default
 };
 
