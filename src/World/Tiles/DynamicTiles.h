@@ -25,14 +25,11 @@ public:
 	void setTilePosition(sf::Vector2f tPosition);
 
 	void ToggleCollision(bool set);
-	void ToggleDestructable(bool set);
 
 	void Collision(Player &entity);
 
 	void drawTile(sf::RenderTarget& renderer);
 
 	sf::RectangleShape getTile();
-
-	bool destroy = false;
 };
 

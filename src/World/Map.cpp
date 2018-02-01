@@ -132,7 +132,7 @@ void Map::drawStatic(sf::RenderTarget & renderer)
 	{
 		for (auto& sTile : STiles)
 		{
-			renderer.draw(sTile.getTile());
+			sTile.drawTile(renderer);
 		}
 	}
 }
@@ -182,7 +182,17 @@ void Map::drawDynamic(sf::RenderTarget & renderer)
 	{
 		for (auto& dTile : DTiles)
 		{
-			renderer.draw(dTile.getTile());
+			dTile.drawTile(renderer);
+		}
+	}
+}
+void Map::updateDynamic()
+{
+	for (int i = 0; i < DTiles.size(); i++)
+	{
+		if (DTiles[i].DestroyTile == true)
+		{
+			DTiles.erase(DTiles.begin() + i);
 		}
 	}
 }

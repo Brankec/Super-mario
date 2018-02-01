@@ -61,9 +61,9 @@ void StatePlaying::update(sf::Time deltaTime)
 		}
 
 		player.playerUpdate(deltaTime.asSeconds());
-
 		map.Collision(player);
-		player.setPos();
+
+		map.updateDynamic();
 
 		Camera::followPlayerSmooth(player.playerRec.getPosition(), deltaTime.asSeconds());
 	}

@@ -11,7 +11,8 @@ public:
 
 
 protected:
-	void CheckForGround(sf::RectangleShape& tile, Player &entity);
-	void CollidePlayer(sf::RectangleShape& tile, Player &entity);
+	void CheckForGround(sf::RectangleShape& tile, Player &player);
+	void CollidePlayer(sf::RectangleShape& tile, Player &player);
+	void HitBrickUnderPlayer(sf::RectangleShape& tile, Player &player, bool& isHitUnder);
 };
 

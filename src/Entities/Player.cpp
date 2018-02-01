@@ -50,18 +50,27 @@ void Player::playerUpdate(float deltaTime)
 		isOnGround = false;
 	}
 
-	if ((playerRec.getPosition().x - playerRec.getSize().x / 2) <= (Camera::getView().getCenter().x - Camera::getView().getSize().x / 2)) //The moving invisible left wall
+	if ((playerRec.getPosition().x - playerRec.getSize().x / 2 + 15) <= (Camera::getView().getCenter().x - Camera::getView().getSize().x / 2)) //The moving invisible left wall
 	{
-		playerRec.setPosition((Camera::getView().getCenter().x - Camera::getView().getSize().x / 2) + 0.01 + playerRec.getSize().x / 2, playerRec.getPosition().y);
+		playerRec.setPosition((Camera::getView().getCenter().x - Camera::getView().getSize().x / 2) + 0.01 + playerRec.getSize().x / 2 - 15, playerRec.getPosition().y);
 		velocity.x = 0;
 	}
 
 
 	frameDelay += deltaTime;
 
+	if (isMoving)
+	{
+		animationSpeed = Lerp(animationSpeed, speedMAX, 0.01f);
+	}
+	else
+	{
+		animationSpeed = Lerp(animationSpeed, 0, 0.01f);
+	}
+
 	if (frameStage.x < 3)
 	{
-		if (velocity.x != 0 && frameDelay > 0.1f / abs(velocity.x))
+		if (velocity.x != 0 && frameDelay > 0.2f / animationSpeed)
 		{
 			frameDelay = 0;
 			frameStage.x++;
@@ -74,11 +83,6 @@ void Player::playerUpdate(float deltaTime)
 
 	playerAnimation();
 
-	setPos();
-}
-
-void Player::setPos()
-{
 	playerRec.move(velocity.x, velocity.y);
 }
 
@@ -94,6 +98,8 @@ void Player::playerControl()
 	{
 		velocity.x = Lerp(velocity.x, speedMAX, 0.02f); //1) current speed ,2) max speed, 3)acceleration speed
 
+		isMoving = true;
+
 		playerRec.setScale(1, 1); //for turning right
 		Angle = 90;
 	}
@@ -101,14 +107,16 @@ void Player::playerControl()
 	{
 		velocity.x = Lerp(velocity.x, -speedMAX, 0.02f);
 
+		isMoving = true;
+
 		playerRec.setScale(-1, 1); //for turning left
 		Angle = -90;
 	}
 	else
 	{
+		isMoving = false;
 		if (isOnGround)
 		{
-			frameStage.x = 0;
 			velocity.x = Lerp(velocity.x, 0, 0.03f);
 
 			if (abs(velocity.x) < 0.3f)
@@ -121,34 +129,33 @@ void Player::playerControl()
 	{
 		isJumping = true;
 		jumpSound.playSound(30);
-		velocity.y = -9;
+		velocity.y = -13;
 	}
 
 	//Sprint
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))   //only for bugtesting
 	{
-		speedMAX = 3;
+		speedMAX = 6;
 	}
 	else
 	{
-		speedMAX = 2;
+		speedMAX = 4;
 	}
 }
 
 void Player::playerAnimation()
 {
-
 	if (velocity.x == 0)
 	{
 		playerRec.setTextureRect(playerFrame[0][0]); // stand still
 	}
-	else if(isOnGround || velocity.y == 0)
+	else
 	{
 		playerRec.setTextureRect(playerFrame[frameStage.x][1]); //run
 	}
 
 	
-	if (velocity.y != 0)
+	if (velocity.y != 0 && isJumping)
 	{
 		playerRec.setTextureRect(playerFrame[1][0]); // jump
 	}

@@ -14,13 +14,13 @@ public:
 public:
 	void loadPlayerAnimation();
 	void playerUpdate(float deltaTime);
-	void setPos();
 	void playerControl();
 	void playerAnimation();
 
 	bool isJumping = false;
 	bool isOnGround = false;
 	bool isFinished = false;
+	bool isMoving = false;
 
 private:
 	float Lerp(float x, float y, float z);
@@ -28,6 +28,8 @@ private:
 	sf::Vector2u frameStage = { 0,0 };
 	float frameDelay = 0;
 	Jump jumpSound;
+
+	float animationSpeed = 0;
 
 public:
 	sf::RectangleShape playerRec;

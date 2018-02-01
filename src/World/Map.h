@@ -27,8 +27,11 @@ public:
 
 	void loadTilesStatic();//main player layer with all 4 collisions
 	void drawStatic(sf::RenderTarget& renderer);
+
 	void loadTilesDynamic();
 	void drawDynamic(sf::RenderTarget& renderer);
+	void updateDynamic();
+
 	void Collision(Player & player);
 
 	void loadTilesBackground();//for decorations

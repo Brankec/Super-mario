@@ -41,7 +41,11 @@ void StaticTiles::Collision(Player & entity)
 
 void StaticTiles::drawTile(sf::RenderTarget & renderer)
 {
-	renderer.draw(tileRec);
+	if ((tileRec.getPosition().x + 64 + tileRec.getSize().x / 2) >= (Camera::getView().getCenter().x - Camera::getView().getSize().x / 2) && //draws only within our view on X axis
+		(tileRec.getPosition().x - tileRec.getSize().x / 2) <= (Camera::getView().getCenter().x + Camera::getView().getSize().x / 2))
+	{
+		renderer.draw(tileRec);
+	}
 }
 
 sf::RectangleShape StaticTiles::getTile()
