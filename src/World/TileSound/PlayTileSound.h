@@ -2,15 +2,15 @@
 #include "../../Sound/Sound.h"
 #include <vector>
 
-class PlayEntitySound
+class PlayTileSound
 {
 public:
-	PlayEntitySound();
+	PlayTileSound();
 
 public:
 	void playSound(int volume);
 
-	void update();
+	void update(float deltaTime);
 
 	void isSoundOver();
 

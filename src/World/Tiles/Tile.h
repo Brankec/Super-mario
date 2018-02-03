@@ -17,6 +17,6 @@ protected:
 	bool doesCollide = false; //default
 
 public:
-	bool DestroyTile = false; //default
+	bool isTileHit = false; //default
 };
 

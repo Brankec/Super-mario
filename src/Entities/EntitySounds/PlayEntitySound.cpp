@@ -12,7 +12,7 @@ void PlayEntitySound::playSound(int volume)
 	entitySound.emplace_back(soundBuffer, volume);
 }
 
-void PlayEntitySound::update(float deltaTime)
+void PlayEntitySound::update()
 {
 	isSoundOver();
 }
@@ -23,7 +23,7 @@ void PlayEntitySound::isSoundOver()
 	{
 		if (entitySound[i].isSoundStop())
 		{
-			entitySound.erase(entitySound.begin() + i);
+			//entitySound.erase(entitySound.begin() + i);  //for some reason this interrupts the jump sound when I jump again before this one finished
 		}
 	}
 }

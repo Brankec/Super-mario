@@ -9,6 +9,8 @@ void TileCollision::CheckForGround(sf::RectangleShape & tile, Player & player)
 {
 	sf::FloatRect playerBounds = player.playerRec.getGlobalBounds();
 
+	playerBounds.left   = player.playerRec.getGlobalBounds().left   + 5;
+	playerBounds.width  = player.playerRec.getGlobalBounds().width  - 5;
 	playerBounds.height = player.playerRec.getGlobalBounds().height + 5;
 
 	if (playerBounds.intersects(tile.getGlobalBounds()))
@@ -86,8 +88,8 @@ void TileCollision::HitBrickUnderPlayer(sf::RectangleShape& tile, Player &player
 
 		if (playerRight > BlockLeft &&
 			playerLeft < BlockRight &&
-			playerBottom > BlockTop + 32 &&
-			playerTop < BlockBottom - 32)
+			playerBottom > BlockTop &&
+			playerTop < BlockBottom )
 		{
 			if (playerRight >= BlockLeft && playerLeft <= BlockLeft && player.velocity.x >= 0)  //Left side of the Block
 			{
@@ -102,8 +104,8 @@ void TileCollision::HitBrickUnderPlayer(sf::RectangleShape& tile, Player &player
 			}
 
 		}
-		if (playerRight > BlockLeft + 5 &&
-			playerLeft < BlockRight - 5 &&
+		if (playerRight > BlockLeft - 5 &&
+			playerLeft < BlockRight + 5 &&
 			playerBottom > BlockTop &&
 			playerTop < BlockBottom)
 		{

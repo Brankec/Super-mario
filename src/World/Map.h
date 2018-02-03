@@ -8,6 +8,7 @@
 #include "../Entities/Player.h"
 #include "../Util/Camera.h"
 #include "../World/Level.h"
+#include "Tiles/SpawnTiles.h"
 #include "Tiles/DynamicTiles.h"
 #include "Tiles/StaticTiles.h"
 #include "Tiles/BackgroundTiles.h"
@@ -30,7 +31,11 @@ public:
 
 	void loadTilesDynamic();
 	void drawDynamic(sf::RenderTarget& renderer);
-	void updateDynamic();
+	void updateDynamic(bool& isBig);
+
+	void loadTilesSpawn();
+	void drawSpawn(sf::RenderTarget& renderer);
+	void updateSpawn(bool& isBig);
 
 	void Collision(Player & player);
 
@@ -47,13 +52,14 @@ public:
 	sf::Texture tileTexture;
 	sf::Vector2i tileSize;
 
-	std::vector<std::vector<sf::Vector2f>> mapForeGround, mapBackGround, mapDynamic, mapStatic;
+	std::vector<std::vector<sf::Vector2f>> mapForeGround, mapBackGround, mapDynamic, mapStatic, mapSpawn;
 	std::vector<sf::Vector2f> tempMap;
 	sf::Vector2i loadCounter;
 	int amountOfTiles;
 
 	//open the file containing the tile name and tile positions
 	std::ifstream openfileForeground;
+	std::ifstream openfileSpawn;
 	std::ifstream openfileDynamic;
 	std::ifstream openfileStatic;
 	std::ifstream openfileBackground;
@@ -62,6 +68,7 @@ public:
 
 	std::vector<BackgroundTiles> FTiles; //foreground layer
 	std::vector<DynamicTiles> DTiles; //static tiles
+	std::vector<SpawnTiles> QTiles; //question tiles
 	std::vector<StaticTiles> STiles; //dynamic tiles
 	std::vector<BackgroundTiles> BTiles; //background layer
 };

@@ -16,6 +16,9 @@ void Map::loadMap(Level& levelsPass)
 	if (openfileDynamic.is_open())
 		openfileDynamic.close();
 
+	if (openfileSpawn.is_open())
+		openfileSpawn.close();
+
 	if (openfileBackground.is_open())
 		openfileBackground.close();
 
@@ -24,6 +27,7 @@ void Map::loadMap(Level& levelsPass)
 	openfileForeground.open("res/Maps/" + levels->ForeGround + ".txt");
 	openfileStatic.open("res/Maps/" + levels->Static + ".txt");
 	openfileDynamic.open("res/Maps/" + levels->Dynamic + ".txt");
+	openfileSpawn.open("res/Maps/" + levels->Spawn + ".txt");
 	openfileBackground.open("res/Maps/" + levels->BackGround + ".txt");
 
 	this->powOfN = pow(2, levels->gridSize);
@@ -34,6 +38,7 @@ void Map::loadMap(Level& levelsPass)
 	loadTilesForeground();
 	loadTilesStatic();
 	loadTilesDynamic();
+	loadTilesSpawn();
 	loadTilesBackground();
 }
 
@@ -186,13 +191,83 @@ void Map::drawDynamic(sf::RenderTarget & renderer)
 		}
 	}
 }
-void Map::updateDynamic()
+void Map::updateDynamic(bool& isBig)
 {
 	for (int i = 0; i < DTiles.size(); i++)
 	{
-		if (DTiles[i].DestroyTile == true)
+		if (DTiles[i].isTileHit == true)
 		{
-			DTiles.erase(DTiles.begin() + i);
+			if (isBig)
+			{
+				DTiles.erase(DTiles.begin() + i);
+				DTiles[i].brickDestroy.playSound(60);
+				DTiles[i].brickDestroy.isSoundOver();
+			}
+			else
+			{
+				DTiles[i].jumpTile();
+				DTiles[i].brickDestroy.isSoundOver();
+			}
+		}
+	}
+}
+
+void Map::loadTilesSpawn()
+{
+	mapSpawn.clear();
+
+	if (openfileSpawn.is_open())
+	{
+		std::string tileLocation;
+		openfileSpawn >> tileLocation;
+
+		if (tileTexture.loadFromFile(tileLocation))
+
+			while (openfileSpawn.good())
+			{
+				openfileSpawn >> tileIndex;
+				if (tileIndex != ',')
+				{
+					tempMap.push_back(Sprite_sheet_coordinates(tileIndex - 1)); //the indices will always be for 1 less inside the code(so 0 is actually -1 and 1 is actually 0)
+
+					if (openfileSpawn.peek() == '\n')
+					{
+						mapSpawn.push_back(tempMap);
+						tempMap.clear();
+					}
+				}
+			}
+	}
+	if (mapSpawn.size() != 0)
+	{
+		for (int x = 0; x < mapSpawn[1].size(); x++)
+		{
+			for (int y = 0; y < mapSpawn.size(); y++)
+			{
+				if (mapSpawn[y][x].x != -1 && mapSpawn[y][x].y != -1)
+				{
+					QTiles.emplace_back(x * (float)powOfN, y * (float)powOfN, tileTexture, mapSpawn[y][x]);
+				}
+			}
+		}
+	}
+}
+void Map::drawSpawn(sf::RenderTarget & renderer)
+{
+	if (mapSpawn.size() != 0)
+	{
+		for (auto& qTile : QTiles)
+		{
+			qTile.drawTile(renderer);
+		}
+	}
+}
+void Map::updateSpawn(bool& isBig)
+{
+	for (int i = 0; i < QTiles.size(); i++)
+	{
+		if (QTiles[i].isTileHit == true)
+		{
 		}
 	}
 }
@@ -212,6 +287,14 @@ void Map::Collision(Player & player)
 		for (auto& dTile : DTiles)
 		{
 			dTile.Collision(player);
+		}
+	}
+
+	if (mapSpawn.size() != 0)
+	{
+		for (auto& qTile : QTiles)
+		{
+			qTile.Collision(player);
 		}
 	}
 }

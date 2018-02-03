@@ -63,7 +63,8 @@ void StatePlaying::update(sf::Time deltaTime)
 		player.playerUpdate(deltaTime.asSeconds());
 		map.Collision(player);
 
-		map.updateDynamic();
+		map.updateDynamic(player.isBig);
+		map.updateSpawn(player.isBig);
 
 		Camera::followPlayerSmooth(player.playerRec.getPosition(), deltaTime.asSeconds());
 	}
@@ -85,6 +86,7 @@ void StatePlaying::render(sf::RenderTarget& renderer)
 
 		map.drawStatic(renderer); //Main (player base)
 		map.drawDynamic(renderer); //Main (player base)
+		map.drawSpawn(renderer);
 
 		renderer.draw(player.playerRec); //player
 

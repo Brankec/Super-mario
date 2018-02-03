@@ -22,6 +22,8 @@ public:
 	bool isFinished = false;
 	bool isMoving = false;
 
+	bool isBig = false;
+
 private:
 	float Lerp(float x, float y, float z);
 	sf::IntRect playerFrame[12][2];

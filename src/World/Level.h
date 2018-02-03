@@ -14,6 +14,7 @@ public:
 		BackGround = "Level 1/Level1_background";
 		Static = "Level 1/Level1_static";
 		Dynamic = "Level 1/Level1_dynamic";
+		Spawn = "Level 1/Level1_spawn";
 		ForeGround = "Level 1/Level1_foreground";
 
 		gridSize = 6;//size of each tile(not the texture)
@@ -30,6 +31,7 @@ public:
 		BackGround = "Level 1/Level1_background";
 		Static = "Level 1/Level1_static";
 		Dynamic = "Level 1/Level1_dynamic";
+		Spawn = "Level 1/Level1_spawn";
 		ForeGround = "Level 1/Level1_foreground";
 
 		gridSize = 6;
@@ -46,7 +48,7 @@ public:
 
 	}
 
-	std::string BackGround, BackGroundMain, Static, Dynamic, ForeGround, Interactable;
+	std::string BackGround, Static, Dynamic, Spawn, ForeGround;
 	int gridSize, amountOfTilesX;
 	sf::Vector2i tileSize;
 	int objectiveTileCoords;

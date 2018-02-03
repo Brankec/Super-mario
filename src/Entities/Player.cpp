@@ -3,7 +3,6 @@
 
 
 Player::Player()
-	: jumpSound("jump_super")
 {
 	playerRec.setSize({ 64,64 });
 	playerRec.setPosition(8*64, 800);
@@ -18,6 +17,8 @@ Player::Player()
 	speedMAX = 2;
 
 	gravity = 0.3;
+
+	isBig = true;
 }
 
 void Player::loadPlayerAnimation()
@@ -30,12 +31,13 @@ void Player::loadPlayerAnimation()
 
 	//moving stage
 	playerFrame[0][1] = { 19, 0, 16, 16 };
-	playerFrame[1][1] = { 38, 0, 14, 16 };
+	playerFrame[1][1] = { 36, 0, 16, 16 };
 	playerFrame[2][1] = { 52, 0, 16, 16 };
 }
 
 void Player::playerUpdate(float deltaTime)
 {
+	jumpSound.update();
 	if (velocity.y != 0) //this is only temporary. atm isOnGround is true whenever I touch anything at any side
 	{
 		isOnGround = false;
@@ -50,18 +52,11 @@ void Player::playerUpdate(float deltaTime)
 		isOnGround = false;
 	}
 
-	if ((playerRec.getPosition().x - playerRec.getSize().x / 2 + 15) <= (Camera::getView().getCenter().x - Camera::getView().getSize().x / 2)) //The moving invisible left wall
-	{
-		playerRec.setPosition((Camera::getView().getCenter().x - Camera::getView().getSize().x / 2) + 0.01 + playerRec.getSize().x / 2 - 15, playerRec.getPosition().y);
-		velocity.x = 0;
-	}
-
-
 	frameDelay += deltaTime;
 
 	if (isMoving)
 	{
-		animationSpeed = Lerp(animationSpeed, speedMAX, 0.01f);
+		animationSpeed = Lerp(animationSpeed, speedMAX, 0.02f);
 	}
 	else
 	{
@@ -83,6 +78,12 @@ void Player::playerUpdate(float deltaTime)
 
 	playerAnimation();
 
+	if ((playerRec.getPosition().x - playerRec.getSize().x / 2 + 15) <= (Camera::getView().getCenter().x - Camera::getView().getSize().x / 2)) //The moving invisible left wall
+	{
+		playerRec.setPosition((Camera::getView().getCenter().x - Camera::getView().getSize().x / 2) + 0.01 + playerRec.getSize().x / 2 - 15, playerRec.getPosition().y);
+		velocity.x = 0;
+	}
+
 	playerRec.move(velocity.x, velocity.y);
 }
 
@@ -100,6 +101,7 @@ void Player::playerControl()
 
 		isMoving = true;
 
+		if(isOnGround)
 		playerRec.setScale(1, 1); //for turning right
 		Angle = 90;
 	}
@@ -109,6 +111,7 @@ void Player::playerControl()
 
 		isMoving = true;
 
+		if(isOnGround)
 		playerRec.setScale(-1, 1); //for turning left
 		Angle = -90;
 	}
@@ -149,7 +152,7 @@ void Player::playerAnimation()
 	{
 		playerRec.setTextureRect(playerFrame[0][0]); // stand still
 	}
-	else
+	else if(frameStage.x < 3)
 	{
 		playerRec.setTextureRect(playerFrame[frameStage.x][1]); //run
 	}

@@ -1,6 +1,6 @@
 #include "Jump.h"
 
-Jump::Jump(std::string audioName)
+Jump::Jump()
 {
-	soundBuffer.loadFromFile("res/entities/audio/" + audioName + ".wav");
+	soundBuffer.loadFromFile("res/entities/audio/jump_super.wav");
 }

@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-//#include "../World/Map.h"
 
 #pragma once
 class Entity
@@ -24,8 +23,6 @@ public:
 	sf::Vector2f velocity = { 0, 0 };
 
 	int Angle = 90;
-
-	bool isColliding[4];//collision goes clock wise 0) is left, 1) is bottom, 2) is right, 3) is top
 
 protected:
 	int currentHealth = 10;
