@@ -26,10 +26,12 @@ public:
 
 private:
 	float Lerp(float x, float y, float z);
-	sf::IntRect playerFrame[12][2];
+	sf::IntRect playerFrame[2][5];
 	sf::Vector2u frameStage = { 0,0 };
 	float frameDelay = 0;
 	Jump jumpSound;
+
+	sf::Vector2f playerSize = { 64,64 };
 
 	float animationSpeed = 0;
 
@@ -38,7 +40,7 @@ public:
 	sf::Texture playerTex;
 
 	float speedMAX;
-	float gravity;
+	float gravity = 0.3;
 	sf::Vector2f velocity = { 0, 0 };
 
 	int Angle = 90;

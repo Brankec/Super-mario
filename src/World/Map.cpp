@@ -268,17 +268,18 @@ void Map::updateSpawn(bool& isBig)
 	{
 		if (QTiles[i].isTileHit == true)
 		{
+			QTiles[i].jumpTile();
 		}
 	}
 }
 
-void Map::Collision(Player & player)
+void Map::CollisionPlayer(Player & player) //optimize collision for the goomba before hacking it
 {
 	if (mapStatic.size() != 0)
 	{
 		for (auto& sTile : STiles)
 		{
-			sTile.Collision(player);
+			sTile.CollisionPlayer(player);
 		}
 	}
 
@@ -286,7 +287,7 @@ void Map::Collision(Player & player)
 	{
 		for (auto& dTile : DTiles)
 		{
-			dTile.Collision(player);
+			dTile.CollisionPlayer(player);
 		}
 	}
 
@@ -294,7 +295,33 @@ void Map::Collision(Player & player)
 	{
 		for (auto& qTile : QTiles)
 		{
-			qTile.Collision(player);
+			qTile.CollisionPlayer(player);
+		}
+	}
+}
+void Map::CollisionGoomba(Goomba &goomba)
+{
+	if (mapStatic.size() != 0)
+	{
+		for (auto& sTile : STiles)
+		{
+			sTile.CollisionGoomba(goomba);
+		}
+	}
+
+	if (mapDynamic.size() != 0)
+	{
+		for (auto& dTile : DTiles)
+		{
+			dTile.CollisionGoomba(goomba);
+		}
+	}
+
+	if (mapSpawn.size() != 0)
+	{
+		for (auto& qTile : QTiles)
+		{
+			qTile.CollisionGoomba(goomba);
 		}
 	}
 }

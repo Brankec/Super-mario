@@ -2,13 +2,13 @@
 
 
 
-Player::Player()
+Player::Player() //the reason why the player fuks up when increasing size is because of the origin that doesnt get updated with the new size
 {
 	playerRec.setSize({ 64,64 });
-	playerRec.setPosition(8*64, 800);
-	playerRec.setOrigin(playerRec.getSize().x / 2, playerRec.getSize().y / 2);
+	playerRec.setPosition(8*64, 700);
+	playerRec.setOrigin(playerRec.getSize().x / 2, playerRec.getSize().y);
 
-	if (playerTex.loadFromFile("res/entities/sprite/mario_small.png"))
+	if (playerTex.loadFromFile("res/entities/sprite/mario.png"))
 		playerRec.setTexture(&playerTex);
 
 	loadPlayerAnimation();
@@ -16,28 +16,46 @@ Player::Player()
 
 	speedMAX = 2;
 
-	gravity = 0.3;
-
-	isBig = true;
+	//isBig = true;
 }
 
 void Player::loadPlayerAnimation()
 {
 	//Idle stage
-	playerFrame[0][0] = { 3, 0, 16, 16 };
+	playerFrame[0][0] = { 0, 32, 16, 16 }; //small mario
+	playerFrame[1][0] = { 0,  0, 16, 32 }; //big mario
 
 	//Jump stage
-	playerFrame[1][0] = { 86, 0, 16, 16 };
+	playerFrame[0][1] = { 85, 32, 16, 16 };//small mario
+	playerFrame[1][1] = { 85,  0, 16, 32 };//big mario
 
 	//moving stage
-	playerFrame[0][1] = { 19, 0, 16, 16 };
-	playerFrame[1][1] = { 36, 0, 16, 16 };
-	playerFrame[2][1] = { 52, 0, 16, 16 };
+	playerFrame[0][2] = { 16, 32, 16, 16 };//small mario
+	playerFrame[0][3] = { 32, 32, 16, 16 };//small mario
+	playerFrame[0][4] = { 51, 32, 16, 16 };//small mario
+
+	playerFrame[1][2] = { 16,  0, 16, 32 };//big mario
+	playerFrame[1][3] = { 33,  0, 16, 32 };//big mario
+	playerFrame[1][4] = { 51,  0, 16, 32 };//big mario
 }
 
 void Player::playerUpdate(float deltaTime)
 {
-	jumpSound.update();
+	if (isBig)
+	{
+		playerSize.y = 128;
+		playerRec.setOrigin(playerRec.getSize().x / 2, playerRec.getSize().y);
+	}
+	else
+	{
+		playerSize.y = 64;
+		playerRec.setOrigin(playerRec.getSize().x / 2, playerRec.getSize().y);
+	}
+
+	playerRec.setSize(playerSize);
+
+
+
 	if (velocity.y != 0) //this is only temporary. atm isOnGround is true whenever I touch anything at any side
 	{
 		isOnGround = false;
@@ -63,17 +81,17 @@ void Player::playerUpdate(float deltaTime)
 		animationSpeed = Lerp(animationSpeed, 0, 0.01f);
 	}
 
-	if (frameStage.x < 3)
+	if (frameStage.y > 1 && frameStage.y < 5)
 	{
 		if (velocity.x != 0 && frameDelay > 0.2f / animationSpeed)
 		{
 			frameDelay = 0;
-			frameStage.x++;
+			frameStage.y++;
 		}
 	}
 	else
 	{
-		frameStage.x = 0;
+		frameStage.y = 2;
 	}
 
 	playerAnimation();
@@ -94,6 +112,11 @@ float Player::Lerp(float x, float y, float z) //acceleration or deceleration
 
 void Player::playerControl()
 {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+		isBig = true;
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::N))
+		isBig = false;
+
 	//X axis
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && playerRec.getPosition().x)
 	{
@@ -148,21 +171,38 @@ void Player::playerControl()
 
 void Player::playerAnimation()
 {
-	if (velocity.x == 0)
+	if (isBig)
 	{
-		playerRec.setTextureRect(playerFrame[0][0]); // stand still
-	}
-	else if(frameStage.x < 3)
-	{
-		playerRec.setTextureRect(playerFrame[frameStage.x][1]); //run
-	}
+		if (velocity.x == 0)
+		{
+			playerRec.setTextureRect(playerFrame[1][0]); // stand still
+		}
+		else if (frameStage.y > 1 && frameStage.y < 5)
+		{
+			playerRec.setTextureRect(playerFrame[1][frameStage.y]); //run
+		}
 
-	
-	if (velocity.y != 0 && isJumping)
-	{
-		playerRec.setTextureRect(playerFrame[1][0]); // jump
+		if (velocity.y != 0 && isJumping)
+		{
+			playerRec.setTextureRect(playerFrame[1][1]); // jump
+		}
 	}
-	
+	else
+	{
+		if (velocity.x == 0)
+		{
+			playerRec.setTextureRect(playerFrame[0][0]); // stand still
+		}
+		else if (frameStage.y > 1 && frameStage.y < 5)
+		{
+			playerRec.setTextureRect(playerFrame[0][frameStage.y]); //run
+		}
+
+		if (velocity.y != 0 && isJumping)
+		{
+			playerRec.setTextureRect(playerFrame[0][1]); // jump
+		}
+	}
 }
 
 

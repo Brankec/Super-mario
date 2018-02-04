@@ -23,7 +23,7 @@ void PlayEntitySound::isSoundOver()
 	{
 		if (entitySound[i].isSoundStop())
 		{
-			//entitySound.erase(entitySound.begin() + i);  //for some reason this interrupts the jump sound when I jump again before this one finished
+			entitySound.erase(entitySound.begin() + i);  //for some reason this interrupts the jump sound when I jump again before this one finished
 		}
 	}
 }

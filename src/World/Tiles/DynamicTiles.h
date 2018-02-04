@@ -28,7 +28,8 @@ public:
 
 	void ToggleCollision(bool set);
 
-	void Collision(Player &entity);
+	void CollisionPlayer(Player &entity);
+	void CollisionGoomba(Goomba & goomba);
 
 	void drawTile(sf::RenderTarget& renderer);
 

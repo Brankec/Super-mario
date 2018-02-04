@@ -2,11 +2,14 @@
 #define STATEPLAYING_H_INCLUDED
 
 #include "StateBase.h"
-#include "../Entities/Player.h"
 #include "../Util/Camera.h"
 #include "../World/Map.h"
 #include "../GUI/inGameMenu.h"
 #include "../World/Level.h"
+
+//all entities
+#include "../Entities/Player.h"
+#include "../Entities/Goomba.h"
 
 class StatePlaying
 	: public StateBase
@@ -21,6 +24,8 @@ class StatePlaying
      void fixedUpdate    (sf::Time deltaTime)            override;
      void render         (sf::RenderTarget& renderer)    override;
 
+	 void collisions();
+
 	 void pushState(bool*m_shouldPush)          override;
 	 void popState(bool & shouldPop)                 override;
 
@@ -28,6 +33,7 @@ private:
 	int nextLevel = 1;
 	Level levels;
 	Player player;
+	std::vector<Goomba> goomba;
 	Map map;
 	bool openMenu = false;
 	bool* shouldPop;

@@ -4,6 +4,11 @@ StatePlaying::StatePlaying(Game& game)
 :   StateBase   (game)
 {
 	map.loadMap(levels);
+	//goomba.emplace_back(sf::Vector2f(570,808));
+	//goomba.emplace_back(sf::Vector2f(540, 808));
+
+	goomba.emplace_back(sf::Vector2f(390, 808));
+	goomba.emplace_back(sf::Vector2f(1260, 808));
 }
 
 void StatePlaying::handleEvent(sf::Event e)
@@ -61,7 +66,11 @@ void StatePlaying::update(sf::Time deltaTime)
 		}
 
 		player.playerUpdate(deltaTime.asSeconds());
-		map.Collision(player);
+		for (auto& goombas : goomba)
+		{
+			goombas.GumboUpdate(deltaTime.asSeconds());
+		}
+		collisions();
 
 		map.updateDynamic(player.isBig);
 		map.updateSpawn(player.isBig);
@@ -89,6 +98,10 @@ void StatePlaying::render(sf::RenderTarget& renderer)
 		map.drawSpawn(renderer);
 
 		renderer.draw(player.playerRec); //player
+		for (auto& goombas : goomba)
+		{
+			renderer.draw(goombas.entityRec);
+		}
 
 		map.drawForeGround(renderer); //Foreground
 
@@ -96,6 +109,16 @@ void StatePlaying::render(sf::RenderTarget& renderer)
 
 		if (openMenu)
 			renderMenu(renderer);
+}
+
+void StatePlaying::collisions()
+{
+	map.CollisionPlayer(player);
+
+	for (auto& goombas : goomba)
+	{
+		map.CollisionGoomba(goombas);
+	}
 }
 
 void StatePlaying::pushState(bool*m_shouldPush)

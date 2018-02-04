@@ -37,7 +37,9 @@ public:
 	void drawSpawn(sf::RenderTarget& renderer);
 	void updateSpawn(bool& isBig);
 
-	void Collision(Player & player);
+	void CollisionPlayer(Player & player);
+	void CollisionGoomba(Goomba &goomba);
+
 
 	void loadTilesBackground();//for decorations
 	void drawBackGround(sf::RenderTarget& renderer);

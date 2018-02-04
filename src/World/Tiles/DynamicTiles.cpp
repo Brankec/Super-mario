@@ -33,13 +33,19 @@ void DynamicTiles::ToggleCollision(bool set)
 	doesCollide = set;
 }
 
-void DynamicTiles::Collision(Player & entity)
+void DynamicTiles::CollisionPlayer(Player & entity)
 {
 	if (doesCollide)
 	{
-		CheckForGround(tileRec, entity);
+		CheckForGround(tileRec, entity.playerRec.getGlobalBounds(), entity.isOnGround);
 		HitBrickUnderPlayer(tileRec, entity, isTileHit);
 	}
+}
+
+void DynamicTiles::CollisionGoomba(Goomba & goomba)
+{
+	CheckForGround(tileRec, goomba.entityRec.getGlobalBounds(), goomba.isOnGround);
+	CollideGoomba(tileRec, goomba);
 }
 
 void DynamicTiles::drawTile(sf::RenderTarget & renderer)

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SFML\Graphics.hpp>
 #include "Entity.h"
 #include "EntitySounds/Jump.h"
@@ -5,22 +7,21 @@
 #include <algorithm>
 #include "Entity.h"
 
-#pragma once
-class Gumbo : public Entity
+class Goomba : public Entity
 {
 public:
-	Gumbo();
+	Goomba(sf::Vector2f position);
 
 public:
 	void loadGumboAnimation();
 	void GumboUpdate(float deltaTime);
-	void setPos();
-	void GumboAnimation();
+	sf::Vector2f getGoombaPos();
+	void GumboAnimation(float deltaTime);
 
 	bool isOnGround;
 
 private:
-	sf::IntRect GumboFrame[12][2];
+	sf::IntRect GumboFrame[1][2];
 	sf::Vector2u frameStage = { 0,0 };
 	float frameDelay = 0;
 };

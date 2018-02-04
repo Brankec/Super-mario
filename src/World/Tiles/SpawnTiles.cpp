@@ -13,6 +13,9 @@ SpawnTiles::SpawnTiles(int TilePositionX, int TilePositionY, sf::Texture& tileTe
 	setTileTexture(tileIndex);
 
 	ToggleCollision(true);
+
+	playAnimation = true;
+	firstPositionY = tileRec.getPosition().y;//for determing how far should it go up nefore going down when hit
 }
 
 void SpawnTiles::setTileTexture(sf::Vector2f tileIndex) //the index is the actual tile texture position.
@@ -30,13 +33,19 @@ void SpawnTiles::ToggleCollision(bool set)
 	doesCollide = set;
 }
 
-void SpawnTiles::Collision(Player & entity)
+void SpawnTiles::CollisionPlayer(Player & entity)
 {
 	if (doesCollide)
 	{
-		CheckForGround(tileRec, entity);
+		CheckForGround(tileRec, entity.playerRec.getGlobalBounds(), entity.isOnGround);
 		HitBrickUnderPlayer(tileRec, entity, isTileHit);
 	}
+}
+
+void SpawnTiles::CollisionGoomba(Goomba & goomba)
+{
+	CheckForGround(tileRec, goomba.entityRec.getGlobalBounds(), goomba.isOnGround);
+	CollideGoomba(tileRec, goomba);
 }
 
 void SpawnTiles::drawTile(sf::RenderTarget & renderer)
@@ -46,6 +55,33 @@ void SpawnTiles::drawTile(sf::RenderTarget & renderer)
 	{
 		renderer.draw(tileRec);
 	}
+}
+
+void SpawnTiles::jumpTile()
+{
+	animationPositionY = tileRec.getPosition().y;
+
+	if (playAnimation)
+	{
+		if (animationPositionY < firstPositionY - 20)
+		{
+			playAnimation = false;
+		}
+		animationPositionY--;
+	}
+	else
+	{
+		if (animationPositionY > firstPositionY - 1)
+		{
+			isTileHit = false;
+			playAnimation = true;
+		}
+
+		if (isTileHit)
+			animationPositionY++;
+	}
+
+	tileRec.setPosition(tileRec.getPosition().x, animationPositionY);
 }
 
 sf::RectangleShape SpawnTiles::getTile()

@@ -26,12 +26,18 @@ public:
 
 	void ToggleCollision(bool set);
 
-	void Collision(Player &entity);
+	void CollisionPlayer(Player &entity);
+	void CollisionGoomba(Goomba & goomba);
 
 	void drawTile(sf::RenderTarget& renderer);
 
+	void jumpTile();
+
 	sf::RectangleShape getTile();
 
-
+private:
+	bool playAnimation;
+	float firstPositionY;
+	float animationPositionY;
 };
 

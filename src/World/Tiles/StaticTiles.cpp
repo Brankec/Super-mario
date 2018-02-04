@@ -30,13 +30,19 @@ void StaticTiles::ToggleCollision(bool set)
 	doesCollide = set;
 }
 
-void StaticTiles::Collision(Player & entity)
+void StaticTiles::CollisionPlayer(Player & entity)
 {
 	if (doesCollide)
 	{
-		CheckForGround(tileRec, entity);
+		CheckForGround(tileRec, entity.playerRec.getGlobalBounds(), entity.isOnGround);
 		CollidePlayer(tileRec, entity);
 	}
+}
+
+void StaticTiles::CollisionGoomba(Goomba & goomba)
+{
+	CheckForGround(tileRec, goomba.entityRec.getGlobalBounds(), goomba.isOnGround);
+	CollideGoomba(tileRec, goomba);
 }
 
 void StaticTiles::drawTile(sf::RenderTarget & renderer)
