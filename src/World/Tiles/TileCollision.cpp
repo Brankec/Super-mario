@@ -23,8 +23,8 @@ void TileCollision::CollidePlayer(sf::RectangleShape& tile, Player &player)
 {
 	if (player.playerRec.getGlobalBounds().intersects(tile.getGlobalBounds()))
 	{
-		float playerLeft = player.playerRec.getPosition().x - player.playerRec.getGlobalBounds().width / 2 + 15;
-		float playerRight = player.playerRec.getPosition().x + player.playerRec.getGlobalBounds().width / 2 - 15;
+		float playerLeft = player.playerRec.getPosition().x - player.playerRec.getGlobalBounds().width / 2 + 5;
+		float playerRight = player.playerRec.getPosition().x + player.playerRec.getGlobalBounds().width / 2 - 5;
 		float playerTop = player.playerRec.getPosition().y - player.playerRec.getGlobalBounds().height;
 		float playerBottom = player.playerRec.getPosition().y;
 
@@ -76,8 +76,8 @@ void TileCollision::HitBrickUnderPlayer(sf::RectangleShape& tile, Player &player
 {
 	if (player.playerRec.getGlobalBounds().intersects(tile.getGlobalBounds()))
 	{
-		float playerLeft = player.playerRec.getPosition().x - player.playerRec.getGlobalBounds().width / 2 + 15;
-		float playerRight = player.playerRec.getPosition().x + player.playerRec.getGlobalBounds().width / 2 - 15;
+		float playerLeft = player.playerRec.getPosition().x - player.playerRec.getGlobalBounds().width / 2 + 5;
+		float playerRight = player.playerRec.getPosition().x + player.playerRec.getGlobalBounds().width / 2 - 5;
 		float playerTop = player.playerRec.getPosition().y - player.playerRec.getGlobalBounds().height;
 		float playerBottom = player.playerRec.getPosition().y;
 
@@ -86,10 +86,10 @@ void TileCollision::HitBrickUnderPlayer(sf::RectangleShape& tile, Player &player
 		float BlockTop = tile.getPosition().y;
 		float BlockBottom = tile.getPosition().y + tile.getSize().y;
 
-		if (playerRight > BlockLeft      &&
-			playerLeft < BlockRight      &&
+		if (playerRight > BlockLeft && //these hacked values should be tweaked for better collision detection
+			playerLeft < BlockRight &&
 			playerBottom > BlockTop + 32 &&
-			playerTop < BlockBottom - 32 )
+			playerTop < BlockBottom - 32)
 		{
 			if (playerRight >= BlockLeft && playerLeft <= BlockLeft && player.velocity.x >= 0)  //Left side of the Block
 			{
@@ -104,8 +104,8 @@ void TileCollision::HitBrickUnderPlayer(sf::RectangleShape& tile, Player &player
 			}
 
 		}
-		if (playerRight > BlockLeft - 5 &&
-			playerLeft < BlockRight + 5 &&
+		if (playerRight > BlockLeft + 5 &&
+			playerLeft < BlockRight - 5 &&
 			playerBottom > BlockTop &&
 			playerTop < BlockBottom)
 		{
@@ -142,20 +142,20 @@ void TileCollision::CollideGoomba(sf::RectangleShape & tile, Goomba &goomba)
 		float BlockTop = tile.getPosition().y;
 		float BlockBottom = tile.getPosition().y + tile.getSize().y;
 
-		if (goombaRight > BlockLeft && //these acked values should be tweaked for better collision detection
+		if (goombaRight > BlockLeft && //these hacked values should be tweaked for better collision detection
 			goombaLeft < BlockRight &&
 			goombaBottom > BlockTop + 32 &&
 			goombaTop < BlockBottom - 32)
 		{
 			if (goombaRight >= BlockLeft && goombaLeft <= BlockLeft && goomba.velocity.x >= 0)  //Left side of the Block
 			{
-				goomba.entityRec.move(-abs(goomba.velocity.x), 0);
+				//goomba.entityRec.setPosition(BlockLeft, goomba.entityRec.getPosition().y);
 				goomba.velocity.x = -abs(goomba.velocity.x);
 			}
 
 			if (goombaLeft <= BlockRight && goombaRight >= BlockRight && goomba.velocity.x <= 0)   //Right side of the block
 			{
-				goomba.entityRec.move(abs(goomba.velocity.x), 0);
+				//goomba.entityRec.move(abs(goomba.velocity.x), 0);
 				goomba.velocity.x = abs(goomba.velocity.x);
 			}
 

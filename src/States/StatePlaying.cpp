@@ -71,6 +71,7 @@ void StatePlaying::update(sf::Time deltaTime)
 			goombas.GumboUpdate(deltaTime.asSeconds());
 		}
 		collisions();
+		//player.playerRec.move(player.velocity.x, player.velocity.y);
 
 		map.updateDynamic(player.isBig);
 		map.updateSpawn(player.isBig);

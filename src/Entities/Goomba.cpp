@@ -6,6 +6,7 @@ Goomba::Goomba(sf::Vector2f position)
 	entityRec.setSize({ 48,48 });
 	entityRec.setOrigin(entityRec.getSize().x / 2, entityRec.getSize().y / 2);
 	entityRec.setPosition(position);
+	velocity.x = 1.5;
 }
 
 void Goomba::loadGumboAnimation()
@@ -29,7 +30,7 @@ void Goomba::GumboUpdate(float deltaTime)
 		isOnGround = false;
 	}
 
-	velocity.x = -1.5;
+	//velocity.x = 1.5;
 
 	entityRec.move(velocity.x, velocity.y);
 }

@@ -17,6 +17,7 @@ Player::Player() //the reason why the player fuks up when increasing size is bec
 	speedMAX = 2;
 
 	//isBig = true;
+	//gravity = 0;
 }
 
 void Player::loadPlayerAnimation()
