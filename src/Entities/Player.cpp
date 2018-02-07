@@ -1,5 +1,5 @@
 #include "Player.h"
-
+#include "../ResourceManger/Resources.h"
 
 
 Player::Player() //the reason why the player fuks up when increasing size is because of the origin that doesnt get updated with the new size
@@ -8,8 +8,9 @@ Player::Player() //the reason why the player fuks up when increasing size is bec
 	playerRec.setPosition(8*64, 700);
 	playerRec.setOrigin(playerRec.getSize().x / 2, playerRec.getSize().y);
 
-	if (playerTex.loadFromFile("res/entities/sprite/mario.png"))
-		playerRec.setTexture(&playerTex);
+	playerTex = res::getPlayerTexture(); //resource manager
+
+	playerRec.setTexture(&playerTex);
 
 	loadPlayerAnimation();
 	playerRec.setTextureRect(sf::IntRect(0, 0, 7, 11));

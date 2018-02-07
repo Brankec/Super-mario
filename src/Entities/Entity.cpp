@@ -4,14 +4,15 @@
 
 Entity::Entity()
 {
-	loadTextureToRec();
+	//loadTextureToRec();
 }
 
-void Entity::loadTextureToRec(std::string textureName)
+/*void Entity::loadTextureToRec(std::string textureName)
 {
 	if (entityTex.loadFromFile("res/entities/sprite/" + textureName + ".png"))
 	{
-		//entityRec.setTexture(&entityTex);
+		entityRec.setTexture(&entityTex);
+		std::cout << "Goomba" << std::endl;
 	}
 }
 
@@ -23,5 +24,5 @@ void Entity::loadTextureToSpr(std::string textureName)
 
 void Entity::loadAudioBuffer(std::string audioName)
 {
-}
+}*/
 

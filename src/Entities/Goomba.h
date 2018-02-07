@@ -24,5 +24,7 @@ private:
 	sf::IntRect GumboFrame[1][2];
 	sf::Vector2u frameStage = { 0,0 };
 	float frameDelay = 0;
+
+	float AnimationDelay = 0;
 };
 

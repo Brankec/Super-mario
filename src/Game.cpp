@@ -1,11 +1,15 @@
 #include "Game.h"
 
+#include "ResourceManger/Resources.h"
+
 #include "States/StatePlaying.h"
 #include "States/StateMenu.h"
 
 Game::Game()
 :   m_window    ({400*3, 300*3}, "Super Mario Bros") //for 4:3 ratio
 {
+	res::loadResources();
+
 	//m_window.setView(view);
     m_window.setFramerateLimit(100);
 

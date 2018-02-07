@@ -33,7 +33,7 @@ private:
 	int nextLevel = 1;
 	Level levels;
 	Player player;
-	std::vector<Goomba> goomba;
+	std::vector<Goomba> goombas;
 	Map map;
 	bool openMenu = false;
 	bool* shouldPop;

@@ -9,8 +9,8 @@ void TileCollision::CheckForGround(sf::RectangleShape & tile, sf::FloatRect posi
 {
 	sf::FloatRect entityBounds = position;
 
-	entityBounds.left   = position.left   + 5;
-	entityBounds.width  = position.width  - 5;
+	entityBounds.left   = position.left   + 10;
+	entityBounds.width  = position.width  - 10;
 	entityBounds.height += 5;
 
 	if (entityBounds.intersects(tile.getGlobalBounds()))
@@ -26,7 +26,7 @@ void TileCollision::CollidePlayer(sf::RectangleShape& tile, Player &player)
 		float playerLeft = player.playerRec.getPosition().x - player.playerRec.getGlobalBounds().width / 2 + 5;
 		float playerRight = player.playerRec.getPosition().x + player.playerRec.getGlobalBounds().width / 2 - 5;
 		float playerTop = player.playerRec.getPosition().y - player.playerRec.getGlobalBounds().height;
-		float playerBottom = player.playerRec.getPosition().y;
+		float playerBottom = player.playerRec.getPosition().y; //origin of player is middle at the bottom
 
 		float BlockLeft = tile.getPosition().x;
 		float BlockRight = tile.getPosition().x + tile.getSize().x;

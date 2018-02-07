@@ -305,7 +305,7 @@ void Map::CollisionGoomba(Goomba &goomba)
 	{
 		for (auto& sTile : STiles)
 		{
-			sTile.CollisionGoomba(goomba);
+			//sTile.CollisionGoomba(goomba);
 		}
 	}
 
@@ -313,7 +313,7 @@ void Map::CollisionGoomba(Goomba &goomba)
 	{
 		for (auto& dTile : DTiles)
 		{
-			dTile.CollisionGoomba(goomba);
+			//dTile.CollisionGoomba(goomba);
 		}
 	}
 
@@ -321,7 +321,7 @@ void Map::CollisionGoomba(Goomba &goomba)
 	{
 		for (auto& qTile : QTiles)
 		{
-			qTile.CollisionGoomba(goomba);
+			//qTile.CollisionGoomba(goomba);
 		}
 	}
 }

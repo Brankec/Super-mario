@@ -2,15 +2,16 @@
 
 Goomba::Goomba(sf::Vector2f position)
 {
-	entityRec.setTextureRect(sf::IntRect(0, 16, 16, 16));
+	//entityRec.setTextureRect(sf::IntRect(0, 16, 16, 16));
 	entityRec.setSize({ 48,48 });
 	entityRec.setOrigin(entityRec.getSize().x / 2, entityRec.getSize().y / 2);
 	entityRec.setPosition(position);
-	velocity.x = 1.5;
+	velocity.x = -1.5;
 }
 
 void Goomba::loadGumboAnimation()
 {
+
 }
 
 void Goomba::GumboUpdate(float deltaTime)
@@ -30,8 +31,6 @@ void Goomba::GumboUpdate(float deltaTime)
 		isOnGround = false;
 	}
 
-	//velocity.x = 1.5;
-
 	entityRec.move(velocity.x, velocity.y);
 }
 
@@ -42,4 +41,17 @@ sf::Vector2f Goomba::getGoombaPos()
 
 void Goomba::GumboAnimation(float deltaTime)
 {
+	AnimationDelay += deltaTime;
+
+	if (AnimationDelay <= 0.5f)
+	{
+		entityRec.setTextureRect(sf::IntRect(0, 16, 16, 16));
+	}
+	else
+	{
+		if (AnimationDelay >= 1.f)
+			AnimationDelay = 0;
+
+		entityRec.setTextureRect(sf::IntRect(16, 16, 16, 16));
+	}
 }

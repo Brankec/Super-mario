@@ -7,8 +7,14 @@ StatePlaying::StatePlaying(Game& game)
 	//goomba.emplace_back(sf::Vector2f(570,808));
 	//goomba.emplace_back(sf::Vector2f(540, 808));
 
-	goomba.emplace_back(sf::Vector2f(390, 808));
-	goomba.emplace_back(sf::Vector2f(1260, 808));
+	//goombas.reserve(6);
+
+	goombas.emplace_back(sf::Vector2f(190, 808));
+	goombas.emplace_back(sf::Vector2f(2060, 808));
+	goombas.emplace_back(sf::Vector2f(3090, 808));
+	goombas.emplace_back(sf::Vector2f(4060, 808));
+	goombas.emplace_back(sf::Vector2f(5090, 808));
+	goombas.emplace_back(sf::Vector2f(660, 808));
 }
 
 void StatePlaying::handleEvent(sf::Event e)
@@ -66,9 +72,9 @@ void StatePlaying::update(sf::Time deltaTime)
 		}
 
 		player.playerUpdate(deltaTime.asSeconds());
-		for (auto& goombas : goomba)
+		for (auto& goomba : goombas)
 		{
-			goombas.GumboUpdate(deltaTime.asSeconds());
+			goomba.GumboUpdate(deltaTime.asSeconds());
 		}
 		collisions();
 		//player.playerRec.move(player.velocity.x, player.velocity.y);
@@ -99,9 +105,9 @@ void StatePlaying::render(sf::RenderTarget& renderer)
 		map.drawSpawn(renderer);
 
 		renderer.draw(player.playerRec); //player
-		for (auto& goombas : goomba)
+		for (auto& goomba : goombas)
 		{
-			renderer.draw(goombas.entityRec);
+			renderer.draw(goomba.entityRec);
 		}
 
 		map.drawForeGround(renderer); //Foreground
@@ -116,9 +122,9 @@ void StatePlaying::collisions()
 {
 	map.CollisionPlayer(player);
 
-	for (auto& goombas : goomba)
+	for (auto& goomba : goombas)
 	{
-		map.CollisionGoomba(goombas);
+		map.CollisionGoomba(goomba);
 	}
 }
 
